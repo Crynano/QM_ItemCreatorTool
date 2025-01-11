@@ -7,11 +7,13 @@ namespace QM_ItemCreatorTool.Model
     public class ModDataModel
     {
         public string Name { get; set; } = "Default Name";
+
         public ModDataModel()
         {
            
         }
 
-        public ObservableCollection<WeaponViewModel> WeaponList { get; set; } = new ObservableCollection<WeaponViewModel>();   
+        // When exporting, we populate this.
+        public List<WeaponViewModel> WeaponList;
     }
 }

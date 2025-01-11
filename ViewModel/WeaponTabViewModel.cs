@@ -1,4 +1,5 @@
-﻿using QM_ItemCreatorTool.Managers;
+﻿using MGSC;
+using QM_ItemCreatorTool.Managers;
 using QM_ItemCreatorTool.Model;
 using Spellweaver.Commands;
 using System.Collections.ObjectModel;
@@ -13,14 +14,11 @@ namespace QM_ItemCreatorTool.ViewModel
     {
         #region Data
         private DataProviderManager _dataProvider;
-        private ModInstanceManager _modInstanceManager;
-        private object _lockObject = new object();
         #endregion
 
-        public WeaponTabViewModel(DataProviderManager dataProvider, ModInstanceManager modInstanceManager)
+        public WeaponTabViewModel(DataProviderManager dataProvider)
         {
             _dataProvider = dataProvider;
-            _modInstanceManager = modInstanceManager;
 
             WeaponClassList = _dataProvider.WeaponClasses;
             WeaponSubclassList = _dataProvider.WeaponSubclasses;
@@ -48,24 +46,34 @@ namespace QM_ItemCreatorTool.ViewModel
             }
         }
 
-        public ModDataViewModel CurrentMod
-        {
-            get 
-            {  
-                return _modInstanceManager.CurrentMod; 
-            }
-        }
-
         #endregion
 
         #region Collections
-        public ObservableCollection<WeaponViewModel> WeaponList
+        public ModDataViewModel CurrentMod
+        {
+            get => ModInstanceManager.CurrentMod;
+            set
+            {
+                ModInstanceManager.CurrentMod = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private ICollectionView _weaponView;
+        public ICollectionView WeaponView
         {
             get
             {
-                return CurrentMod.Weapons;
+                return _weaponView;
+            }
+            set
+            {
+                _weaponView = value;
+                RaisePropertyChanged();
             }
         }
+
+        public ObservableCollection<WeaponViewModel> WeaponList { get { return CurrentMod.Weapons; } }
 
         public List<string> WeaponClassList { get; set; } = new List<string>();
         public List<string> WeaponSubclassList { get; set; } = new List<string>();
@@ -91,7 +99,7 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             if (SelectedWeapon == null) return;
             var indexOfWeapon = WeaponList.IndexOf(SelectedWeapon) - 1;
-            CurrentMod.RemoveWeapon(SelectedWeapon);
+            ModInstanceManager.CurrentMod.RemoveWeapon(SelectedWeapon);
             if (indexOfWeapon >= 0)
                 SelectedWeapon = WeaponList[indexOfWeapon];
             else
@@ -101,11 +109,11 @@ namespace QM_ItemCreatorTool.ViewModel
         private void CreateNew(object? parameter)
         {
             var newWeapon = new WeaponViewModel(new QM_WeaponImporter.WeaponTemplate());
-            CurrentMod.AddWeapon(newWeapon);
+            ModInstanceManager.CurrentMod.AddWeapon(newWeapon);
             SelectedWeapon = newWeapon;
         }
 
-        private bool CanExecuteCommand(object? obj) => CurrentMod != null;
+        private bool CanExecuteCommand(object? obj) => ModInstanceManager.CurrentMod != null;
 
         #endregion
 

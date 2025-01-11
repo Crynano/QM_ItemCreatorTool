@@ -65,7 +65,7 @@ namespace QM_ItemCreatorTool.Managers
                     // Transform into our viewmodel
                     // Then store
                     WeaponViewModel viewModel = new WeaponViewModel(singleWeapon);
-                    modifiedModData.Weapons.Add(viewModel);
+                    modifiedModData.AddWeapon(viewModel);
                 }
                 if (operationLog != string.Empty)
                     _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");

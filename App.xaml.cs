@@ -24,8 +24,8 @@ namespace QM_ItemCreatorTool
             service.AddTransient<MainViewModel>();
             service.AddTransient<MainWindow>();
 
-            service.AddSingleton<ModInstanceManager>();
             service.AddSingleton<IErrorHandler, MessageBoxErrorHandler>();
+            service.AddSingleton<IMessageBoxHandler, ConfirmationManager>();
 
             service.AddTransient<GeneralTabViewModel>();
             service.AddTransient<WeaponTabViewModel>();

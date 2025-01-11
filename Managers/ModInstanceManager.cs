@@ -1,32 +1,27 @@
-﻿using QM_ItemCreatorTool.Model;
+﻿using QM_ItemCreatorTool.Interfaces;
+using QM_ItemCreatorTool.Model;
 using QM_ItemCreatorTool.ViewModel;
-using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.Managers
 {
-    public class ModInstanceManager : ViewModelBase
+    public static class ModInstanceManager
     {
-        public ObservableCollection<ModDataViewModel> ModCollection { get; set; } = new ObservableCollection<ModDataViewModel>();
+        private static IMessageBoxHandler _adviceHandler = new ConfirmationManager();
 
-        private ModDataViewModel _currentMod = new ModDataViewModel(new ModDataModel());
-        public ModDataViewModel CurrentMod
-        {
-            get { return _currentMod; }
-            set
-            {
-                _currentMod = value;
-                RaisePropertyChanged();
-            }
-        }
-  
-        public void LoadNewMod(string configFilePath)
+        public static ModDataViewModel CurrentMod { get; set; } = new ModDataViewModel(new ModDataModel());
+
+        public static void LoadNewMod(string configFilePath)
         {
             ModDataViewModel modDataViewModel = new ModDataViewModel(new ModDataModel());
             bool loadResult = ModDataManager.LoadMod(configFilePath, ref modDataViewModel);
             if (loadResult)
             {
                 // Then store it.
-                ModCollection.Add(modDataViewModel);
+                // Maybe trigger a warning that says it'll override the mod data.
+                if (_adviceHandler.ThrowWarningConfirmation("Overriding existing data.",
+                    "Are you sure you want to load a new mod and override existing data?" +
+                    "\nAll unsaved data will be erased."))
+                    CurrentMod.LoadNew(modDataViewModel);
             }
         }
     }

@@ -9,11 +9,9 @@ namespace QM_ItemCreatorTool.ViewModel;
 public class GeneralTabViewModel : ViewModelBase
 {
     private IErrorHandler _errorHandler;
-    private ModInstanceManager _modInstanceManager;
-	public GeneralTabViewModel(IErrorHandler errorHandler, ModInstanceManager modInstanceManager)
+	public GeneralTabViewModel(IErrorHandler errorHandler)
 	{
         _errorHandler = errorHandler;
-        _modInstanceManager = modInstanceManager;
 
         // Commands
         SelectRootFolderCommand = new DelegateCommand(StoreRootPath);
@@ -30,21 +28,6 @@ public class GeneralTabViewModel : ViewModelBase
         set
         {
             _configFilePath = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public ObservableCollection<ModDataViewModel> ModList
-    {
-        get => _modInstanceManager.ModCollection;
-    }
-
-    public ModDataViewModel SelectedMod
-    {
-        get => _modInstanceManager.CurrentMod;
-        set
-        {
-            _modInstanceManager.CurrentMod = value;
             RaisePropertyChanged();
         }
     }
@@ -94,7 +77,7 @@ public class GeneralTabViewModel : ViewModelBase
             //_errorHandler.ThrowError("Error upon importing root path", ex);
             return;
         }
-        _modInstanceManager.LoadNewMod(result);
+        ModInstanceManager.LoadNewMod(result);
         // Load weapons atm.
     }
 
