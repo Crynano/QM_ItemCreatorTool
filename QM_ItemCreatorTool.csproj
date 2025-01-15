@@ -26,7 +26,7 @@
 	<PropertyGroup>
 		<GAME_NAME>Quasimorph</GAME_NAME>
 		<GAME_PATH>D:\SteamLibrary\steamapps\common\$(GAME_NAME)</GAME_PATH>
-		<MOD_ID>1</MOD_ID>
+		<MOD_ID>3407014011</MOD_ID>
 	</PropertyGroup>
 	<PropertyGroup>
 		<WorkshopPath>$(GAME_PATH)\..\..\workshop\content\2059170\$(MOD_ID)\</WorkshopPath>
@@ -53,7 +53,7 @@
 			<HintPath>$(ManagedPath)Assembly-CSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="QM_LiteItemImporter">
-		  <HintPath>D:\SteamLibrary\steamapps\workshop\content\2059170\3407014011\QM_LiteItemImporter.dll</HintPath>
+		  <HintPath>$(WorkshopPath)QM_LiteItemImporter.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
