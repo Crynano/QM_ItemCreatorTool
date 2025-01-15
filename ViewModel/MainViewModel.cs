@@ -1,4 +1,6 @@
-﻿namespace QM_ItemCreatorTool.ViewModel
+﻿using QM_ItemCreatorTool.Managers;
+
+namespace QM_ItemCreatorTool.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
@@ -38,12 +40,20 @@
         }
         #endregion
 
+       private UserConfigAndSaviourManager userSaviour;
         public MainViewModel(
             WeaponTabViewModel weaponViewModel, 
             GeneralTabViewModel generalTabViewModel)
         {
+            userSaviour = new UserConfigAndSaviourManager();
+
             WeaponTabViewModel = weaponViewModel;
             GeneralTabViewModel = generalTabViewModel;
+        }
+
+        public override async Task LoadAsync()
+        {
+            userSaviour.Initialize();
         }
     }
 }

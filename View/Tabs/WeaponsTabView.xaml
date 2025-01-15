@@ -4,9 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QM_ItemCreatorTool.View.Tabs"
+             xmlns:converters="clr-namespace:QM_ItemCreatorTool.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <Grid.Resources>
+            <converters:StringToFloatConverter x:Key="StringToFloat"/>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -47,8 +51,32 @@
                     <TextBox Text="{Binding SelectedWeapon.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Inheritance ID" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.InheritedID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Image Path" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.SpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Small Sprite Path" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.SmallSpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Shadow Sprite Path" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.ShadowSpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Enemy Spawn Tags (Categories)" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.Categories, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Inventory Width" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding SelectedWeapon.InventoryWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Weapon Tech Level" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.TechLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Weapon Class" DockPanel.Dock="Top"/>
@@ -145,6 +173,23 @@
                     <TextBlock Text="BFG Overlay" DockPanel.Dock="Top"/>
                     <CheckBox IsChecked="{Binding SelectedWeapon.HasBFGOverlay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
+                <Separator/>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Shooting Sound Path" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.AttackSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Dry Shot Sound Path" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.DryShotSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Failed Attack Sound Path" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.FailedAttackSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Reload Sound Path" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.ReloadSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
             </DockPanel>
         </ScrollViewer>
         <DockPanel Grid.Column="1" Margin="5" LastChildFill="True">
@@ -162,7 +207,8 @@
                 <Button Content="Remove weapon" Grid.Column="1" Command="{Binding RemoveWeaponFromListCommand}"></Button>
             </Grid>
             <!--Weapon List-->
-            <ListView ItemsSource="{Binding WeaponList, UpdateSourceTrigger=PropertyChanged}"
+            <ListView DisplayMemberPath="ID"
+                        ItemsSource="{Binding WeaponList, UpdateSourceTrigger=PropertyChanged}"
                       SelectedItem="{Binding SelectedWeapon}">
                 
             </ListView>

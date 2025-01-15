@@ -8,15 +8,17 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <DockPanel LastChildFill="False" Margin="5">
-                <TextBlock Text="Config File Root or File" DockPanel.Dock="Top" Margin="5"></TextBlock>
+            <DockPanel LastChildFill="False" Margin="5" VerticalAlignment="Center">
+                <!--<TextBlock Text="Config File Root or File" DockPanel.Dock="Top" Margin="5"></TextBlock>
                 <DockPanel DockPanel.Dock="Top" Margin="5,0,5,5">
                     <Button Content="Explore Path" DockPanel.Dock="Right"
                             Command="{Binding SelectRootFolderCommand}"></Button>
                     <TextBox DockPanel.Dock="Bottom" Text="{Binding Path=ConfigFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                </DockPanel>
+                </DockPanel>-->
                 <Button Content="Load Mod" DockPanel.Dock="Top" Margin="5" Height="50" Command="{Binding LoadModCommand}"/>
-                <Button Content="Create Mod" DockPanel.Dock="Top" Margin="5"/>
+                <Button Content="Create Mod" DockPanel.Dock="Top" Margin="5" Height="50" Command="{Binding CreateModCommand}"/>
+                <Separator />
+                <Button Content="_Clear Mod Data" DockPanel.Dock="Top" Margin="5" Height="50" Command="{Binding ClearModCommand}"/>
             </DockPanel>
         </ScrollViewer>
     </DockPanel>

@@ -53,7 +53,7 @@
 			<HintPath>$(ManagedPath)Assembly-CSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="QM_LiteItemImporter">
-		  <HintPath>..\..\..\Projects\01 Unity Plugins\QM_LiteItemImporter\package\QM_LiteItemImporter\QM_LiteItemImporter.dll</HintPath>
+		  <HintPath>D:\SteamLibrary\steamapps\workshop\content\2059170\3407014011\QM_LiteItemImporter.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

@@ -1,14 +1,58 @@
 ﻿using QM_ItemCreatorTool.ViewModel;
 using QM_WeaponImporter;
+using QM_WeaponImporter.Templates;
 
 namespace QM_ItemCreatorTool.Model
 {
-    public class WeaponViewModel : ViewModelBase<WeaponTemplate>
+    public class WeaponViewModel : ViewModelBase<RangedWeaponTemplate>
     {
         // Here lie all the properties for the model?
-        public WeaponViewModel(WeaponTemplate model) : base(model)
+
+        public WeaponViewModel(RangedWeaponTemplate model) : base(model)
         {
-            
+
+        }   
+
+        private CustomItemContentDescriptor weaponDescriptor = new CustomItemContentDescriptor();
+
+        public string? SpritePath
+        {
+            get => weaponDescriptor.iconSpritePath;
+            set
+            {
+                weaponDescriptor.iconSpritePath = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string? SmallSpritePath
+        {
+            get => weaponDescriptor.smallIconSpritePath;
+            set
+            {
+                weaponDescriptor.smallIconSpritePath = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string? ShadowSpritePath
+        {
+            get => weaponDescriptor.shadowOnFloorSpritePath;
+            set
+            {
+                weaponDescriptor.shadowOnFloorSpritePath = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string? InheritedID
+        {
+            get => weaponDescriptor.baseItemId;
+            set
+            {
+                weaponDescriptor.baseItemId = value;
+                RaisePropertyChanged();
+            }
         }
 
         public string? ID
@@ -17,9 +61,32 @@ namespace QM_ItemCreatorTool.Model
             set
             {
                 _model.id = value;
+                weaponDescriptor.attachedId = value;
                 RaisePropertyChanged();
             }
         }
+
+        // Tags
+        public string Categories
+        {
+            get => string.Join(",", _model.categories);
+            set
+            {
+                _model.categories = value.Split(",").ToList();
+                RaisePropertyChanged();
+            }
+        }
+
+        public int TechLevel
+        {
+            get => _model.techLevel;
+            set
+            {
+                _model.techLevel = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         public int InventoryWidth
         {
@@ -290,13 +357,58 @@ namespace QM_ItemCreatorTool.Model
 
         // Paths come later?
 
-        //public List<string> randomAttackSoundBank { get; set; }
+        #region Sounds
+        public string? AttackSoundPath
+        {
+            get => _model.randomAttackSoundBank;
+            set
+            {
+                _model.randomAttackSoundBank = value;
+                RaisePropertyChanged();
+            }
+        }
+        public string? DryShotSoundPath
+        {
+            get => _model.randomDryShotSoundBank;
+            set
+            {
+                _model.randomDryShotSoundBank = value;
+                RaisePropertyChanged();
+            }
+        }
+        public string? FailedAttackSoundPath
+        {
+            get => _model.randomFailedAttackSoundBank;
+            set
+            {
+                _model.randomFailedAttackSoundBank = value;
+                RaisePropertyChanged();
+            }
+        }
+        public string? ReloadSoundPath
+        {
+            get => _model.randomReloadSoundBank;
+            set
+            {
+                _model.randomReloadSoundBank = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
 
-        //public List<string> randomDryShotSoundBank { get; set; }
+        #region Functions
+        public void SetDescriptor(CustomItemContentDescriptor newDescriptor)
+        {
+            if (newDescriptor == null) return;
+            weaponDescriptor = newDescriptor;
+        }
 
-        //public List<string> randomFailedAttackSoundBank { get; set; }
-
-        //public List<string> randomReloadSoundBank { get; set; }
+        private List<string> InstantiateIfEmpty(List<string>? List)
+        {
+            if (List == null || List.Count() <= 0) return new List<string>() { string.Empty };
+            return List;
+        }
+        #endregion
 
         //public float visualReachCellDuration { get; set; }
 

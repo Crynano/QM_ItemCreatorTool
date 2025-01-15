@@ -1,12 +1,8 @@
-﻿using MGSC;
-using QM_ItemCreatorTool.Managers;
+﻿using QM_ItemCreatorTool.Managers;
 using QM_ItemCreatorTool.Model;
 using Spellweaver.Commands;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Data;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
@@ -59,22 +55,7 @@ namespace QM_ItemCreatorTool.ViewModel
             }
         }
 
-        private ICollectionView _weaponView;
-        public ICollectionView WeaponView
-        {
-            get
-            {
-                return _weaponView;
-            }
-            set
-            {
-                _weaponView = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public ObservableCollection<WeaponViewModel> WeaponList { get { return CurrentMod.Weapons; } }
-
         public List<string> WeaponClassList { get; set; } = new List<string>();
         public List<string> WeaponSubclassList { get; set; } = new List<string>();
         public List<string> GripTypesList { get; set; } = new List<string>();
@@ -92,7 +73,7 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             if (SelectedWeapon == null) return;
             //_modInstanceManager.CurrentMod.AddWeapon();
-            SelectedWeapon = new WeaponViewModel(new QM_WeaponImporter.WeaponTemplate());
+            SelectedWeapon = new WeaponViewModel(new QM_WeaponImporter.RangedWeaponTemplate());
         }
 
         private void Remove(object? parameter)
@@ -108,7 +89,7 @@ namespace QM_ItemCreatorTool.ViewModel
 
         private void CreateNew(object? parameter)
         {
-            var newWeapon = new WeaponViewModel(new QM_WeaponImporter.WeaponTemplate());
+            var newWeapon = new WeaponViewModel(new QM_WeaponImporter.RangedWeaponTemplate());
             ModInstanceManager.CurrentMod.AddWeapon(newWeapon);
             SelectedWeapon = newWeapon;
         }

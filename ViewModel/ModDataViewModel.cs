@@ -1,4 +1,6 @@
 ﻿using QM_ItemCreatorTool.Model;
+using QM_WeaponImporter;
+using QM_WeaponImporter.Templates;
 using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.ViewModel
@@ -9,21 +11,56 @@ namespace QM_ItemCreatorTool.ViewModel
         public ModDataViewModel(ModDataModel model) : base(model)
         {
             // Leave empty
-
         }
 
-        // Now we can set properties.
+        public ConfigTemplate Configuration { get => this.GetModel.config; set => this.GetModel.config = value; }
+        public List<CustomItemContentDescriptor> Descriptors { get { return this.GetModel.descriptors; } set { this.GetModel.descriptors = value; } }
+
+        #region Descriptors
+        public void AddDescriptor(CustomItemContentDescriptor descriptor)
+        {
+            if (descriptor == null) return;
+            Descriptors.Add(descriptor);
+        }
+
+        public CustomItemContentDescriptor? GetItemDescriptor(string ID)
+        {
+            return Descriptors.Find(x => x.attachedId == ID);
+        }
+
+        private void BindItemDescriptors()
+        {
+            foreach (var weapon in Weapons)
+            {
+                weapon.SetDescriptor(this.GetItemDescriptor(weapon.ID));
+            }
+        }
+        #endregion
+
         #region Weapons
-        private ObservableCollection<WeaponViewModel> _weaponList = new ObservableCollection<WeaponViewModel>();
+
+        //private ObservableCollection<WeaponViewModel> _weaponList = new ObservableCollection<WeaponViewModel>();
+        //public ObservableCollection<WeaponViewModel> Weapons
+        //{
+        //    get
+        //    {
+        //        return _weaponList;
+        //    }
+        //    set
+        //    {
+        //        _weaponList = value;
+        //        RaisePropertyChanged();
+        //    }
+        //}
         public ObservableCollection<WeaponViewModel> Weapons
         {
             get
             {
-                return _weaponList;
+                return GetModel.WeaponList;
             }
             set
             {
-                _weaponList = value;
+                GetModel.WeaponList = value;
                 RaisePropertyChanged();
             }
         }
@@ -44,8 +81,15 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             this.Weapons.Clear();
             replacement.Weapons.ToList().ForEach(this.Weapons.Add);
+            replacement.Descriptors.ToList().ForEach(this.Descriptors.Add);
+            BindItemDescriptors();
         }
 
+        public void ClearMod()
+        {
+            this.Weapons.Clear();
+            this.Descriptors.Clear();
+        }
         #endregion
 
         public string Name
@@ -57,7 +101,5 @@ namespace QM_ItemCreatorTool.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-
     }
 }

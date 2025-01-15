@@ -24,5 +24,21 @@ namespace QM_ItemCreatorTool.Managers
                     CurrentMod.LoadNew(modDataViewModel);
             }
         }
+
+        public static void CreateMod(string configFilePath)
+        {
+            // Create Mod using currentMod
+            // Create data structure.
+            bool loadResult = ModDataManager.CreateMod(configFilePath, CurrentMod);
+            if (loadResult) { _adviceHandler.ThrowInfo("Success!", "SUCC"); }
+        }
+
+        public static void ClearMod() => CurrentMod.ClearMod();
+        
+
+        public static void SetMod(ModDataViewModel newMod)
+        {
+            if (newMod != null) CurrentMod.LoadNew(newMod);
+        }
     }
 }
