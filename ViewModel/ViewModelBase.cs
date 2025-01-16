@@ -1,5 +1,4 @@
-﻿using QM_ItemCreatorTool.Model;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace QM_ItemCreatorTool.ViewModel
@@ -29,7 +28,7 @@ namespace QM_ItemCreatorTool.ViewModel
         protected readonly T _model;
         public ViewModelBase()
         {
-            
+
         }
 
         public ViewModelBase(T model)

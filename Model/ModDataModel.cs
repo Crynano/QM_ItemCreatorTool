@@ -27,13 +27,21 @@ namespace QM_ItemCreatorTool.Model
 
         public void PrepareExport()
         {
-            WeaponList.ToList().ForEach(x => RangedWeaponList.Add(x.GetModel));
+            foreach (var weapon in WeaponList)
+            {
+                RangedWeaponList.Add(weapon.GetModel);
+                descriptors.Add(weapon.GetDescriptor());
+            }
         }
 
         public void LoadFromDeserialize()
         {
             if (RangedWeaponList != null) 
                 RangedWeaponList.ForEach(x => WeaponList.Add(new WeaponViewModel(x)));
+            foreach (var descriptor in descriptors)
+            {
+                WeaponList.ToList().Find(x => x.ID.Equals(descriptor.attachedId))?.SetDescriptor(descriptor);
+            }
         }
     }
 }

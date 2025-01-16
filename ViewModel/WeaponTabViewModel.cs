@@ -2,7 +2,6 @@
 using QM_ItemCreatorTool.Model;
 using Spellweaver.Commands;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
@@ -19,11 +18,16 @@ namespace QM_ItemCreatorTool.ViewModel
             WeaponClassList = _dataProvider.WeaponClasses;
             WeaponSubclassList = _dataProvider.WeaponSubclasses;
             GripTypesList = _dataProvider.GripTypes;
+            _dataProvider.FireModes.ForEach(FireModesList.Add);
+            _dataProvider.Categories.ForEach(Tags.Add);
 
             // Commands
             AddWeaponToListCommand = new DelegateCommand(CreateNew, CanExecuteCommand);
             RemoveWeaponFromListCommand = new DelegateCommand(Remove, CanExecuteCommand);
             CreateNewWeaponCommand = new DelegateCommand(CreateNew, CanExecuteCommand);
+            SpritePathCommand = new DelegateCommand(GetPathForImage);
+            SmallSpritePathCommand = new DelegateCommand(GetPathForSmallImage);
+            ShadowSpritePathCommand = new DelegateCommand(GetPathForShadowImage);
         }
 
         #region Selected Weapon
@@ -56,9 +60,11 @@ namespace QM_ItemCreatorTool.ViewModel
         }
 
         public ObservableCollection<WeaponViewModel> WeaponList { get { return CurrentMod.Weapons; } }
-        public List<string> WeaponClassList { get; set; } = new List<string>();
-        public List<string> WeaponSubclassList { get; set; } = new List<string>();
-        public List<string> GripTypesList { get; set; } = new List<string>();
+        public List<string> WeaponClassList { get; set; }
+        public List<string> WeaponSubclassList { get; set; }
+        public List<string> GripTypesList { get; set; }
+        public ObservableCollection<string> FireModesList { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> Tags { get; set; } = new ObservableCollection<string>();
         #endregion
 
         #region Commands
@@ -66,6 +72,9 @@ namespace QM_ItemCreatorTool.ViewModel
         public DelegateCommand AddWeaponToListCommand { get; }
         public DelegateCommand RemoveWeaponFromListCommand { get; }
         public DelegateCommand CreateNewWeaponCommand { get; }
+        public DelegateCommand SpritePathCommand { get; }
+        public DelegateCommand SmallSpritePathCommand { get; }
+        public DelegateCommand ShadowSpritePathCommand { get; }
 
         #region Commands Implementation
 
@@ -95,6 +104,29 @@ namespace QM_ItemCreatorTool.ViewModel
         }
 
         private bool CanExecuteCommand(object? obj) => ModInstanceManager.CurrentMod != null;
+
+        private void GetPathForImage(object? parameter)
+        {
+            var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
+            if (path != null && SelectedWeapon != null) SelectedWeapon.SpritePath = path;
+        }
+
+        private void GetPathForSmallImage(object? parameter)
+        {
+            var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
+            if (path != null && SelectedWeapon != null) SelectedWeapon.SmallSpritePath = path;
+        }
+
+        private void GetPathForShadowImage(object? parameter)
+        {
+            var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
+            if (path != null && SelectedWeapon != null) SelectedWeapon.ShadowSpritePath = path;
+        }
+        // For the path searching
+        private string? GetPath(string title, string extension)
+        {
+            return FolderExplorerManager.GetPathToFile(title, extension);
+        }
 
         #endregion
 

@@ -3,6 +3,7 @@ using QM_ItemCreatorTool.Interfaces;
 using QM_ItemCreatorTool.Model;
 using QM_ItemCreatorTool.ViewModel;
 using QM_WeaponImporter;
+using QM_WeaponImporter.Templates;
 using System.IO;
 
 namespace QM_ItemCreatorTool.Managers
@@ -28,7 +29,7 @@ namespace QM_ItemCreatorTool.Managers
 
             var fileContents = File.ReadAllText(configPath);
 
-            ConfigTemplate? configFile = JsonConvert.DeserializeObject<QM_WeaponImporter.ConfigTemplate>(fileContents);
+            ConfigTemplate? configFile = JsonConvert.DeserializeObject<ConfigTemplate>(fileContents);
             if (configFile == null || string.IsNullOrEmpty(configFile.descriptorsPath))
             {
                 NullReferenceException ex = new NullReferenceException("Mod config file could not be deserialized.\nPlease check there aren't any errors and the file is a valid JSON format.");
@@ -36,7 +37,7 @@ namespace QM_ItemCreatorTool.Managers
                 return false;
             }
             modifiedModData.Configuration = configFile;
-
+            List<CustomItemContentDescriptor> localDescriptors = new List<CustomItemContentDescriptor>();
             // Load descriptors first of all!
             string? descriptorsRelativePath = configFile.descriptorsPath;
             if (!string.IsNullOrEmpty(descriptorsRelativePath))
@@ -54,7 +55,7 @@ namespace QM_ItemCreatorTool.Managers
                         continue;
                     }
                     // Load as the model
-                    QM_WeaponImporter.Templates.CustomItemContentDescriptor? singleDescriptor = JsonConvert.DeserializeObject<QM_WeaponImporter.Templates.CustomItemContentDescriptor>(fileContent);
+                    CustomItemContentDescriptor? singleDescriptor = JsonConvert.DeserializeObject<CustomItemContentDescriptor>(fileContent);
                     if (singleDescriptor == null)
                     {
                         operationLog += "Could not be parsed. " + descriptor + "\n";
@@ -62,7 +63,7 @@ namespace QM_ItemCreatorTool.Managers
                     }
                     // Transform into our viewmodel
                     // Then store
-                    modifiedModData.AddDescriptor(singleDescriptor);
+                    localDescriptors.Add(singleDescriptor);
                 }
                 if (operationLog != string.Empty)
                     _errorHandler.ThrowWarning("Descriptor Loading Issue", $"The following data could not be loaded:\n{operationLog}");
@@ -88,7 +89,7 @@ namespace QM_ItemCreatorTool.Managers
                         continue;
                     }
                     // Load as the model
-                    RangedWeaponTemplate? singleWeapon = JsonConvert.DeserializeObject<QM_WeaponImporter.RangedWeaponTemplate>(fileContent);
+                    RangedWeaponTemplate? singleWeapon = JsonConvert.DeserializeObject<RangedWeaponTemplate>(fileContent);
                     if (singleWeapon == null)
                     {
                         operationLog += "Could not be parsed. " + weaponFile + "\n";
@@ -97,7 +98,7 @@ namespace QM_ItemCreatorTool.Managers
                     // Transform into our viewmodel
                     // Then store
                     WeaponViewModel viewModel = new WeaponViewModel(singleWeapon);
-                    viewModel.SetDescriptor(modifiedModData.GetItemDescriptor(viewModel.ID));
+                    viewModel.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(viewModel.ID)));
                     modifiedModData.AddWeapon(viewModel);
                 }
                 if (operationLog != string.Empty)
@@ -107,8 +108,11 @@ namespace QM_ItemCreatorTool.Managers
             return true;
         }
 
+        private static string CreateModReport = string.Empty;
+
         public static bool CreateMod(string folderPath, ModDataViewModel modifiedModData)
         {
+            CreateModReport = string.Empty;
             // Just, print stuff lol.
             if (!Directory.Exists(folderPath))
             {
@@ -136,8 +140,6 @@ namespace QM_ItemCreatorTool.Managers
             //    Directory.CreateDirectory(Path.Combine(baseDirectory, item));
             //}
             var fullDescriptorsPath = Path.Combine(baseDirectory, modifiedModData.Configuration.descriptorsPath);
-            var fullIconsPath = Path.Combine(baseDirectory, "Assets/Images");
-            var fullSoundsPath = Path.Combine(baseDirectory, "Assets/Sounds");
             Directory.CreateDirectory(fullDescriptorsPath);
 
             // DONE?
@@ -156,29 +158,47 @@ namespace QM_ItemCreatorTool.Managers
             // There's 4 properties that need copying
             // First try the sound.
 
-            foreach (var item in modifiedModData.Descriptors)
+            foreach (var item in modifiedModData.GetDescriptors())
             {
-                item.iconSpritePath = CopyFileToRelative(item.iconSpritePath, "icon", item.attachedId, fullIconsPath);
-                item.smallIconSpritePath = CopyFileToRelative(item.smallIconSpritePath, "smallIcon" , item.attachedId, fullIconsPath);
+                item.iconSpritePath = CopyFileToRelative(item.iconSpritePath, baseDirectory, "Assets/Images");
+                item.smallIconSpritePath = CopyFileToRelative(item.smallIconSpritePath, baseDirectory, "Assets/Images");
+                item.shadowOnFloorSpritePath = CopyFileToRelative(item.shadowOnFloorSpritePath, baseDirectory, "Assets/Images");
+                // Sounds
+                item.shootSoundPath = CopyFileToRelative(item.shootSoundPath, baseDirectory, "Assets/Sounds");
+                item.dryShotSoundPath = CopyFileToRelative(item.dryShotSoundPath, baseDirectory, "Assets/Sounds");
+                item.failedAttackSoundPath = CopyFileToRelative(item.failedAttackSoundPath, baseDirectory, "Assets/Sounds");
+                item.reloadSoundPath = CopyFileToRelative(item.reloadSoundPath, baseDirectory, "Assets/Sounds");
+                // Finalize
                 string serializedDesc = JsonConvert.SerializeObject(item, Formatting.Indented);
                 File.WriteAllText(Path.Combine(baseDirectory, descriptorsRelativePath, item.attachedId + "_descriptor.json"), serializedDesc);
             }
 
+            if (!string.IsNullOrEmpty(CreateModReport))
+                _errorHandler.ThrowWarning("Errors occurred while creating mod", CreateModReport);
+
             return true;
         }
 
-        private static string CopyFileToRelative(string objectPath, string fileDescription, string itemID, string fullDestinationFolderPath)
+        private static string CopyFileToRelative(string objectPath, string baseDirectory, string relativeDestinationFolderPath)
         {
+            // This is to not alter IDs or bs
+            if (!File.Exists(objectPath))
+            {
+                // Path to file does not exist.
+                CreateModReport += $"File at {objectPath} does not exist. Setting full path on properties.";
+                return objectPath;
+            }
             if (Path.IsPathRooted(objectPath))
             {
                 // Then we copy the file and transform to absolute, then reassign
                 var fileExtension = Path.GetExtension(objectPath);
-                var fileName = itemID + "_" + fileDescription + fileExtension;
-                var fullItemPath = Path.Combine(fullDestinationFolderPath, fileName);
+                var fileName = Path.GetFileName(objectPath); // Let's use the same fileName, no need to change or copy if there's repeated ones
+                var folderPath = Path.Combine(baseDirectory, relativeDestinationFolderPath);
+                var fullItemPath = Path.Combine(baseDirectory, relativeDestinationFolderPath, fileName);
                 // Just in case
-                Directory.CreateDirectory(fullDestinationFolderPath);
+                Directory.CreateDirectory(folderPath);
                 File.Copy(objectPath, fullItemPath, true);
-                return Path.Combine("Assets/Images", fileName);
+                return Path.Combine(relativeDestinationFolderPath, fileName);
             }
             return objectPath;
         }

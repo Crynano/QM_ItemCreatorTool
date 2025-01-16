@@ -7,13 +7,14 @@ namespace QM_ItemCreatorTool.Model
     public class WeaponViewModel : ViewModelBase<RangedWeaponTemplate>
     {
         // Here lie all the properties for the model?
+        private CustomItemContentDescriptor weaponDescriptor;
 
         public WeaponViewModel(RangedWeaponTemplate model) : base(model)
         {
+            weaponDescriptor = new CustomItemContentDescriptor();
+            weaponDescriptor.attachedId = ID;
+        }
 
-        }   
-
-        private CustomItemContentDescriptor weaponDescriptor = new CustomItemContentDescriptor();
 
         public string? SpritePath
         {
@@ -67,12 +68,12 @@ namespace QM_ItemCreatorTool.Model
         }
 
         // Tags
-        public string Categories
+        public List<string> Categories
         {
-            get => string.Join(",", _model.categories);
+            get => _model.categories;
             set
             {
-                _model.categories = value.Split(",").ToList();
+                _model.categories = value;
                 RaisePropertyChanged();
             }
         }
@@ -90,10 +91,10 @@ namespace QM_ItemCreatorTool.Model
 
         public int InventoryWidth
         {
-            get => _model.inventoryWidth;
+            get => _model.inventoryWidthSize;
             set
             {
-                _model.inventoryWidth = value;
+                _model.inventoryWidthSize = value;
                 RaisePropertyChanged();
             }
         }
@@ -264,7 +265,7 @@ namespace QM_ItemCreatorTool.Model
                 RaisePropertyChanged();
             }
         }
-        
+
         public int FractureWoundDamageBonus
         {
             get => _model.fractureWoundDamageBonus;
@@ -360,47 +361,56 @@ namespace QM_ItemCreatorTool.Model
         #region Sounds
         public string? AttackSoundPath
         {
-            get => _model.randomAttackSoundBank;
+            get => weaponDescriptor.shootSoundPath;
             set
             {
-                _model.randomAttackSoundBank = value;
+                weaponDescriptor.shootSoundPath = value;
                 RaisePropertyChanged();
             }
         }
         public string? DryShotSoundPath
         {
-            get => _model.randomDryShotSoundBank;
+            get => weaponDescriptor.dryShotSoundPath;
             set
             {
-                _model.randomDryShotSoundBank = value;
+                weaponDescriptor.dryShotSoundPath = value;
                 RaisePropertyChanged();
             }
         }
         public string? FailedAttackSoundPath
         {
-            get => _model.randomFailedAttackSoundBank;
+            get => weaponDescriptor.failedAttackSoundPath;
             set
             {
-                _model.randomFailedAttackSoundBank = value;
+                weaponDescriptor.failedAttackSoundPath = value;
                 RaisePropertyChanged();
             }
         }
         public string? ReloadSoundPath
         {
-            get => _model.randomReloadSoundBank;
+            get => weaponDescriptor.reloadSoundPath;
             set
             {
-                _model.randomReloadSoundBank = value;
+                weaponDescriptor.reloadSoundPath = value;
                 RaisePropertyChanged();
             }
         }
         #endregion
 
         #region Functions
-        public void SetDescriptor(CustomItemContentDescriptor newDescriptor)
+        public void SetDescriptor(CustomItemContentDescriptor? newDescriptor)
         {
-            if (newDescriptor == null) return;
+            if (newDescriptor == null)
+            {
+                weaponDescriptor = new CustomItemContentDescriptor();
+                weaponDescriptor.attachedId = ID;
+                return;
+            }
             weaponDescriptor = newDescriptor;
+        }
+        public CustomItemContentDescriptor GetDescriptor()
+        {
+            return weaponDescriptor;
         }
 
         private List<string> InstantiateIfEmpty(List<string>? List)

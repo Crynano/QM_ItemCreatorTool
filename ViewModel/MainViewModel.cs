@@ -40,7 +40,7 @@ namespace QM_ItemCreatorTool.ViewModel
         }
         #endregion
 
-       private UserConfigAndSaviourManager userSaviour;
+        private UserConfigAndSaviourManager userSaviour;
         public MainViewModel(
             WeaponTabViewModel weaponViewModel, 
             GeneralTabViewModel generalTabViewModel)

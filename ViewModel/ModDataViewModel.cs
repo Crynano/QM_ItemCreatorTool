@@ -14,27 +14,33 @@ namespace QM_ItemCreatorTool.ViewModel
         }
 
         public ConfigTemplate Configuration { get => this.GetModel.config; set => this.GetModel.config = value; }
-        public List<CustomItemContentDescriptor> Descriptors { get { return this.GetModel.descriptors; } set { this.GetModel.descriptors = value; } }
+        //public List<CustomItemContentDescriptor> Descriptors { get { return this.GetModel.descriptors; } set { this.GetModel.descriptors = value; } }
 
         #region Descriptors
-        public void AddDescriptor(CustomItemContentDescriptor descriptor)
-        {
-            if (descriptor == null) return;
-            Descriptors.Add(descriptor);
-        }
+        //public void AddDescriptor(CustomItemContentDescriptor descriptor)
+        //{
+        //    if (descriptor == null) return;
+        //    Descriptors.Add(descriptor);
+        //}
 
-        public CustomItemContentDescriptor? GetItemDescriptor(string ID)
-        {
-            return Descriptors.Find(x => x.attachedId == ID);
-        }
+        //public CustomItemContentDescriptor? GetItemDescriptor(string ID)
+        //{
+        //    return Descriptors.Find(x => x.attachedId == ID);
+        //}
 
-        private void BindItemDescriptors()
+        private void BindItemDescriptors(List<CustomItemContentDescriptor> descriptors)
         {
             foreach (var weapon in Weapons)
             {
-                weapon.SetDescriptor(this.GetItemDescriptor(weapon.ID));
+                weapon.SetDescriptor(descriptors.Find(x => x.attachedId == weapon.ID));
             }
         }
+
+        public List<CustomItemContentDescriptor> GetDescriptors()
+        {
+            return Weapons.Select(x => x.GetDescriptor()).ToList();
+        }
+
         #endregion
 
         #region Weapons
@@ -81,14 +87,11 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             this.Weapons.Clear();
             replacement.Weapons.ToList().ForEach(this.Weapons.Add);
-            replacement.Descriptors.ToList().ForEach(this.Descriptors.Add);
-            BindItemDescriptors();
         }
 
         public void ClearMod()
         {
             this.Weapons.Clear();
-            this.Descriptors.Clear();
         }
         #endregion
 
