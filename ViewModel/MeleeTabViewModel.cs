@@ -1,26 +1,25 @@
 ﻿using QM_ItemCreatorTool.Managers;
 using QM_ItemCreatorTool.Model;
+using QM_WeaponImporter;
 using Spellweaver.Commands;
 using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
-    public class WeaponTabViewModel : ViewModelBase
+    public class MeleeTabViewModel : ViewModelBase
     {
         #region Data
         private DataProviderManager _dataProvider;
         #endregion
 
-        public WeaponTabViewModel(DataProviderManager dataProvider)
+        public MeleeTabViewModel(DataProviderManager dataProvider)
         {
             _dataProvider = dataProvider;
 
             WeaponClassList = _dataProvider.WeaponClasses;
             WeaponSubclassList = _dataProvider.WeaponSubclasses;
             GripTypesList = _dataProvider.GripTypes;
-            _dataProvider.FireModes.ForEach(FireModesList.Add);
             _dataProvider.Categories.ForEach(Tags.Add);
-            _dataProvider.Grenades.ForEach(GrenadesList.Add);
 
             // Commands
             AddWeaponToListCommand = new DelegateCommand(CreateNew, CanExecuteCommand);
@@ -33,8 +32,8 @@ namespace QM_ItemCreatorTool.ViewModel
 
         #region Selected Weapon
 
-        private WeaponViewModel? _selectedWeapon;
-        public WeaponViewModel? SelectedWeapon
+        private MeleeViewModel? _selectedWeapon;
+        public MeleeViewModel? SelectedWeapon
         {
             get
             {
@@ -60,13 +59,11 @@ namespace QM_ItemCreatorTool.ViewModel
             }
         }
 
-        public ObservableCollection<WeaponViewModel> WeaponList { get { return CurrentMod.Weapons; } }
+        public ObservableCollection<MeleeViewModel> WeaponList { get { return CurrentMod.Melee; } }
         public List<string> WeaponClassList { get; set; }
         public List<string> WeaponSubclassList { get; set; }
         public List<string> GripTypesList { get; set; }
-        public ObservableCollection<string> FireModesList { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> Tags { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<string> GrenadesList { get; set; } = new ObservableCollection<string>();
         #endregion
 
         #region Commands
@@ -84,14 +81,14 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             if (SelectedWeapon == null) return;
             //_modInstanceManager.CurrentMod.AddWeapon();
-            SelectedWeapon = new WeaponViewModel(new QM_WeaponImporter.RangedWeaponTemplate());
+            SelectedWeapon = new MeleeViewModel(new MeleeWeaponTemplate());
         }
 
         private void Remove(object? parameter)
         {
             if (SelectedWeapon == null) return;
             var indexOfWeapon = WeaponList.IndexOf(SelectedWeapon) - 1;
-            ModInstanceManager.CurrentMod.RemoveWeapon(SelectedWeapon);
+            ModInstanceManager.CurrentMod.RemoveMelee(SelectedWeapon);
             if (indexOfWeapon >= 0)
                 SelectedWeapon = WeaponList[indexOfWeapon];
             else
@@ -100,8 +97,8 @@ namespace QM_ItemCreatorTool.ViewModel
 
         private void CreateNew(object? parameter)
         {
-            var newWeapon = new WeaponViewModel(new QM_WeaponImporter.RangedWeaponTemplate());
-            ModInstanceManager.CurrentMod.AddWeapon(newWeapon);
+            var newWeapon = new MeleeViewModel(new MeleeWeaponTemplate());
+            ModInstanceManager.CurrentMod.AddMelee(newWeapon);
             SelectedWeapon = newWeapon;
         }
 

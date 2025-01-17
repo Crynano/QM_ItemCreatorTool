@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="QM_ItemCreatorTool.View.Tabs.WeaponsTabView"
+﻿<UserControl x:Class="QM_ItemCreatorTool.View.Tabs.MeleeTabView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -139,43 +139,16 @@
                                 SelectedItem="{Binding SelectedWeapon.Grip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Ammo Category" DockPanel.Dock="Top"/>
+                    <TextBlock Text="Required Ammo ID" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding SelectedWeapon.RequiredAmmo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Override Ammo ID" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.OverrideAmmo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Default Ammo ID" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding SelectedWeapon.DefaultAmmoId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <!--<DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Override Ammo ID" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.OverrideAmmo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>-->
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Default Grenade ID (Grenade Launcher Only)" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.DefaultGrenadeID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Allowed Grenades (Grenade Launcher Only)" DockPanel.Dock="Top"></TextBlock>
-                    <sdl:MultiSelectComboBox
-                          ItemsSource="{Binding GrenadesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItems="{Binding SelectedWeapon.AllowedGrenadesID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          SelectionMode="Multiple"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Firemodes" DockPanel.Dock="Top"/>
-                    <!--<controls:MultiSelectCombobox ItemSource="{Binding FireModesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                  SelectedItems="{Binding SelectedWeapon.Firemodes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  ItemSeparator=","
-                                                  LookUpContract="{Binding FireModeLookupContract}"/>-->
-                    <sdl:MultiSelectComboBox
-                        ItemsSource="{Binding FireModesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedItems="{Binding SelectedWeapon.Firemodes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        SelectionMode="Multiple">
-                    </sdl:MultiSelectComboBox>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Range" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.Range, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Minimum Damage" DockPanel.Dock="Top"/>
@@ -192,26 +165,6 @@
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Critical Damage" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding SelectedWeapon.CriticalDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Magazine Capacity" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.MagazineCapacity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Reload Duration" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.ReloadDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Reload one bullet at a time?" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.ReloadOneBulletAtATime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Self Charging?" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.IsSelfCharge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Durability" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.Durability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Damage Over Time Wound Damage Bonus" DockPanel.Dock="Top"/>
@@ -234,16 +187,54 @@
                     <TextBox Text="{Binding SelectedWeapon.MinDmgCapBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Ramp Up Value" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.RampUpValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Field of View Angle Multiplier" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding SelectedWeapon.FovLookAngleMult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="BFG Overlay" DockPanel.Dock="Top"/>
                     <CheckBox IsChecked="{Binding SelectedWeapon.HasBFGOverlay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <!--Melee Specific-->
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Melee Splashes to nearby enemies" DockPanel.Dock="Top"/>
+                    <CheckBox IsChecked="{Binding SelectedWeapon.DoesMeleeSplash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Can be Thrown" DockPanel.Dock="Top"/>
+                    <CheckBox IsChecked="{Binding SelectedWeapon.CanThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <!--<DockPanel.Triggers>
+                        <DataTrigger Binding="{Binding SelectedWeapon.CanThrow}" Value="False">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </DockPanel.Triggers>-->
+                    <TextBlock Text="Throw Range" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.ThrowRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Guaranteed Hit on Throw" DockPanel.Dock="Top"/>
+                    <CheckBox IsChecked="{Binding SelectedWeapon.GuaranteedThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Durability" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.Durability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Durability Loss on Throw" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding SelectedWeapon.DurabilityLossOnThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Piercing Throw" DockPanel.Dock="Top"/>
+                    <CheckBox IsChecked="{Binding SelectedWeapon.PiercingThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Can amputate" DockPanel.Dock="Top"/>
+                    <CheckBox IsChecked="{Binding SelectedWeapon.CanAmputate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Amputation on Wound" DockPanel.Dock="Top"/>
+                    <CheckBox IsChecked="{Binding SelectedWeapon.AmputateOnWound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Shooting Sound Path" DockPanel.Dock="Top"/>

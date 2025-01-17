@@ -23,5 +23,9 @@ namespace QM_ItemCreatorTool.Managers
         // Tags provider?
         private Lazy<List<string>> _categories = new Lazy<List<string>>(() => new CategoriesTagsProvider().GetData().ToList());
         public List<string> Categories { get { return _categories.Value; } }
+
+        // Some grenades
+        private Lazy<List<string>> _grenades = new Lazy<List<string>>(() => new GrenadesProvider().GetData().ToList());
+        public List<string> Grenades { get { return _grenades.Value; } }
     }
 }

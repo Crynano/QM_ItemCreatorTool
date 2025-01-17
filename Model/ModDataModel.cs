@@ -15,6 +15,7 @@ namespace QM_ItemCreatorTool.Model
         public ModDataModel()
         {
             WeaponList = new ObservableCollection<WeaponViewModel>();
+            MeleeList = new ObservableCollection<MeleeViewModel>();
         }
 
         public ConfigTemplate config = new ConfigTemplate();
@@ -22,8 +23,11 @@ namespace QM_ItemCreatorTool.Model
         // When exporting, we populate this.
         [JsonIgnore]
         public ObservableCollection<WeaponViewModel> WeaponList;
+        [JsonIgnore]
+        public ObservableCollection<MeleeViewModel> MeleeList;
 
         public List<RangedWeaponTemplate> RangedWeaponList = new List<RangedWeaponTemplate>();
+        public List<MeleeWeaponTemplate> MeleeWeaponList = new List<MeleeWeaponTemplate>();
 
         public void PrepareExport()
         {
@@ -32,15 +36,25 @@ namespace QM_ItemCreatorTool.Model
                 RangedWeaponList.Add(weapon.GetModel);
                 descriptors.Add(weapon.GetDescriptor());
             }
+            foreach (var weapon in MeleeList)
+            {
+                MeleeWeaponList.Add(weapon.GetModel);
+                descriptors.Add(weapon.GetDescriptor());
+            }
         }
 
         public void LoadFromDeserialize()
         {
             if (RangedWeaponList != null) 
                 RangedWeaponList.ForEach(x => WeaponList.Add(new WeaponViewModel(x)));
+            if (MeleeWeaponList != null)
+                MeleeWeaponList.ForEach(x => MeleeList.Add(new MeleeViewModel(x)));
+
             foreach (var descriptor in descriptors)
             {
                 WeaponList.ToList().Find(x => x.ID.Equals(descriptor.attachedId))?.SetDescriptor(descriptor);
+                // Just in case? Double the fun? Double the processing capabilities
+                MeleeList.ToList().Find(x => x.ID.Equals(descriptor.attachedId))?.SetDescriptor(descriptor);
             }
         }
     }

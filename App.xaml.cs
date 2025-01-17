@@ -29,6 +29,7 @@ namespace QM_ItemCreatorTool
 
             service.AddTransient<GeneralTabViewModel>();
             service.AddTransient<WeaponTabViewModel>();
+            service.AddTransient<MeleeTabViewModel>();
 
             service.AddSingleton<DataProviderManager>();
         }

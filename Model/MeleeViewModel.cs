@@ -4,12 +4,12 @@ using QM_WeaponImporter.Templates;
 
 namespace QM_ItemCreatorTool.Model
 {
-    public class WeaponViewModel : ViewModelBase<RangedWeaponTemplate>
+    public class MeleeViewModel : ViewModelBase<MeleeWeaponTemplate>
     {
         // Here lie all the properties for the model?
         private CustomItemContentDescriptor weaponDescriptor;
 
-        public WeaponViewModel(RangedWeaponTemplate model) : base(model)
+        public MeleeViewModel(MeleeWeaponTemplate model) : base(model)
         {
             weaponDescriptor = new CustomItemContentDescriptor();
             weaponDescriptor.attachedId = ID;
@@ -66,7 +66,16 @@ namespace QM_ItemCreatorTool.Model
                 RaisePropertyChanged();
             }
         }
-
+        public float Price
+        {
+            get => _model.price;
+            set { _model.price = value; RaisePropertyChanged(); }
+        }
+        public float Weight
+        {
+            get => _model.weight;
+            set { _model.weight = value; RaisePropertyChanged(); }
+        }
         // Tags
         public List<string> Categories
         {
@@ -316,16 +325,6 @@ namespace QM_ItemCreatorTool.Model
             }
         }
 
-        public int RampUpValue
-        {
-            get => _model.rampUpValue;
-            set
-            {
-                _model.rampUpValue = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public float FovLookAngleMult
         {
             get => _model.fovLookAngleMult;
@@ -354,6 +353,54 @@ namespace QM_ItemCreatorTool.Model
                 _model.hasHFGOverlay = value;
                 RaisePropertyChanged();
             }
+        }
+        public int Durability
+        {
+            get { return _model.maxDurability; }
+            set { _model.maxDurability = value; RaisePropertyChanged(); }
+        }
+
+        // Melee Related
+        public bool DoesMeleeSplash
+        {
+            get { return _model.doesMeleeSplash; }
+            set { _model.doesMeleeSplash = value; RaisePropertyChanged(); }
+        }
+        public bool CanThrow
+        {
+            get { return _model.doesMeleeSplash; }
+            set { _model.doesMeleeSplash = value; RaisePropertyChanged(); }
+        }
+        public bool GuaranteedThrow
+        {
+            get { return _model.throwGuaranteedHit; }
+            set { _model.throwGuaranteedHit = value; RaisePropertyChanged(); }
+        }
+        public bool PiercingThrow
+        {
+            get { return _model.doesThrowPierce; }
+            set { _model.doesThrowPierce = value; RaisePropertyChanged(); }
+        }
+
+        public int ThrowRange
+        {
+            get { return _model.throwRange; }
+            set { _model.throwRange = value; RaisePropertyChanged(); }
+        }
+        public int DurabilityLossOnThrow
+        {
+            get { return _model.durabilityLossOnThrow; }
+            set { _model.durabilityLossOnThrow = value; RaisePropertyChanged(); }
+        }
+        public bool CanAmputate
+        {
+            get { return _model.canMeleeAmputate; }
+            set { _model.canMeleeAmputate = value; RaisePropertyChanged(); }
+        }
+        public bool AmputateOnWound
+        {
+            get { return _model.amputationOnWound; }
+            set { _model.amputationOnWound = value; RaisePropertyChanged(); }
         }
 
         // Paths come later?

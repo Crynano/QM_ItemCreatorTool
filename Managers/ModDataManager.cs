@@ -104,6 +104,41 @@ namespace QM_ItemCreatorTool.Managers
                 if (operationLog != string.Empty)
                     _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
             }
+
+            configFile.folderPaths.TryGetValue("meleeweapons", out string? meleeWeaponsRelativePath);
+            if (!string.IsNullOrEmpty(meleeWeaponsRelativePath))
+            {
+                // Get the data from the weapons
+                // Parse them and add them to our database
+                // Get the file name and filter
+                var weaponsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), meleeWeaponsRelativePath);
+                var weaponFiles = Directory.GetFiles(weaponsFolderPath);
+                string operationLog = string.Empty;
+                foreach (var weaponFile in weaponFiles)
+                {
+                    // Read the file first...
+                    string? fileContent = File.ReadAllText(weaponFile);
+                    if (string.IsNullOrEmpty(fileContent))
+                    {
+                        operationLog += "Empty file? " + weaponFile + "\n";
+                        continue;
+                    }
+                    // Load as the model
+                    MeleeWeaponTemplate? singleWeapon = JsonConvert.DeserializeObject<MeleeWeaponTemplate>(fileContent);
+                    if (singleWeapon == null)
+                    {
+                        operationLog += "Could not be parsed. " + weaponFile + "\n";
+                        continue;
+                    }
+                    // Transform into our viewmodel
+                    // Then store
+                    var viewModel = new MeleeViewModel(singleWeapon);
+                    viewModel.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(viewModel.ID)));
+                    modifiedModData.AddMelee(viewModel);
+                }
+                if (operationLog != string.Empty)
+                    _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
+            }
             modifiedModData.Name = configPath;
             return true;
         }
@@ -142,22 +177,24 @@ namespace QM_ItemCreatorTool.Managers
             var fullDescriptorsPath = Path.Combine(baseDirectory, modifiedModData.Configuration.descriptorsPath);
             Directory.CreateDirectory(fullDescriptorsPath);
 
-            // DONE?
-            // NO!
-            // WRITE DEM WEAPONS YOU BASTARD!
+            // Start deserializing data.
             modifiedModData.Configuration.folderPaths.TryGetValue("rangedweapons", out string? rangedWeaponsRelativePath);
+            string serializedWeapon = string.Empty;
             foreach (var item in modifiedModData.Weapons)
             {
-                string serializedWeapon = JsonConvert.SerializeObject(item.GetModel, Formatting.Indented);
+                serializedWeapon = JsonConvert.SerializeObject(item.GetModel, Formatting.Indented);
                 File.WriteAllText(Path.Combine(baseDirectory, rangedWeaponsRelativePath, item.ID + ".json"), serializedWeapon);
+            }
+
+            modifiedModData.Configuration.folderPaths.TryGetValue("meleeweapons", out string? meleeWeaponsRelativePath);
+            foreach (var item in modifiedModData.Melee)
+            {
+                serializedWeapon = JsonConvert.SerializeObject(item.GetModel, Formatting.Indented);
+                File.WriteAllText(Path.Combine(baseDirectory, meleeWeaponsRelativePath, item.ID + ".json"), serializedWeapon);
             }
 
             string descriptorsRelativePath = modifiedModData.Configuration.descriptorsPath;
             // Before deserializing, change the paths to be relative ones and include the file name!
-            // 
-            // There's 4 properties that need copying
-            // First try the sound.
-
             foreach (var item in modifiedModData.GetDescriptors())
             {
                 item.iconSpritePath = CopyFileToRelative(item.iconSpritePath, baseDirectory, "Assets/Images");
@@ -182,13 +219,13 @@ namespace QM_ItemCreatorTool.Managers
         private static string CopyFileToRelative(string objectPath, string baseDirectory, string relativeDestinationFolderPath)
         {
             // This is to not alter IDs or bs
-            if (!File.Exists(objectPath))
+            if (Path.HasExtension(objectPath) && Path.IsPathRooted(objectPath) && !File.Exists(objectPath))
             {
                 // Path to file does not exist.
                 CreateModReport += $"File at {objectPath} does not exist. Setting full path on properties.";
                 return objectPath;
             }
-            if (Path.IsPathRooted(objectPath))
+            else if (Path.IsPathRooted(objectPath))
             {
                 // Then we copy the file and transform to absolute, then reassign
                 var fileExtension = Path.GetExtension(objectPath);

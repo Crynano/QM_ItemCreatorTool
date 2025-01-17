@@ -38,26 +38,18 @@ namespace QM_ItemCreatorTool.ViewModel
 
         public List<CustomItemContentDescriptor> GetDescriptors()
         {
-            return Weapons.Select(x => x.GetDescriptor()).ToList();
+            List<CustomItemContentDescriptor> localDesc = new List<CustomItemContentDescriptor>();
+            var weaponsDescriptors = Weapons.Select(x => x.GetDescriptor()).ToList();
+            var meleeDescriptors = Melee.Select(x => x.GetDescriptor()).ToList();
+
+            localDesc.AddRange(weaponsDescriptors);
+            localDesc.AddRange(meleeDescriptors);
+            return localDesc;
         }
 
         #endregion
 
         #region Weapons
-
-        //private ObservableCollection<WeaponViewModel> _weaponList = new ObservableCollection<WeaponViewModel>();
-        //public ObservableCollection<WeaponViewModel> Weapons
-        //{
-        //    get
-        //    {
-        //        return _weaponList;
-        //    }
-        //    set
-        //    {
-        //        _weaponList = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
         public ObservableCollection<WeaponViewModel> Weapons
         {
             get
@@ -83,15 +75,43 @@ namespace QM_ItemCreatorTool.ViewModel
             Weapons.Remove(weapon);
         }
 
+        // Melee
+        public ObservableCollection<MeleeViewModel> Melee
+        {
+            get
+            {
+                return GetModel.MeleeList;
+            }
+            set
+            {
+                GetModel.MeleeList = value;
+                RaisePropertyChanged();
+            }
+        }
+        public void AddMelee(MeleeViewModel weapon)
+        {
+            if (weapon == null) return;
+            Melee.Add(weapon);
+        }
+
+        public void RemoveMelee(MeleeViewModel weapon)
+        {
+            if (weapon == null) return;
+            Melee.Remove(weapon);
+        }
+
         public void LoadNew(ModDataViewModel replacement)
         {
             this.Weapons.Clear();
+            this.Melee.Clear();
             replacement.Weapons.ToList().ForEach(this.Weapons.Add);
+            replacement.Melee.ToList().ForEach(this.Melee.Add);
         }
 
         public void ClearMod()
         {
             this.Weapons.Clear();
+            this.Melee.Clear();
         }
         #endregion
 

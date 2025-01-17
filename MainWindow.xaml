@@ -21,6 +21,9 @@
         <DataTemplate DataType="{x:Type ViewModels:WeaponTabViewModel}">
             <Tabs:WeaponsTabView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type ViewModels:MeleeTabViewModel}">
+            <Tabs:MeleeTabView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type ViewModels:GeneralTabViewModel}">
             <Tabs:GeneralTabView/>
         </DataTemplate>
@@ -52,6 +55,9 @@
         <TabControl Grid.Row="1" Margin="2">
             <TabItem Header="General">
                 <ContentControl Content="{Binding Path=GeneralTabViewModel}"/>
+            </TabItem>
+            <TabItem Header="Melee Weapons">
+                <ContentControl Content="{Binding Path=MeleeTabViewModel}"/>
             </TabItem>
             <TabItem Header="Ranged Weapons">
                 <ContentControl Content="{Binding Path=WeaponTabViewModel}"/>
