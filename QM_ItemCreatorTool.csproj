@@ -39,7 +39,7 @@
 	<PropertyGroup>
 		<GAME_NAME>Quasimorph</GAME_NAME>
 		<GAME_PATH>D:\SteamLibrary\steamapps\common\$(GAME_NAME)</GAME_PATH>
-		<MOD_ID>3407014011</MOD_ID>
+		<MOD_ID>3284022031</MOD_ID>
 	</PropertyGroup>
 	<PropertyGroup>
 		<WorkshopPath>$(GAME_PATH)\..\..\workshop\content\2059170\$(MOD_ID)\</WorkshopPath>

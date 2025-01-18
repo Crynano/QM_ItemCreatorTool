@@ -1,4 +1,5 @@
-﻿using QM_ItemCreatorTool.ViewModel;
+﻿using MGSC;
+using QM_ItemCreatorTool.ViewModel;
 using QM_WeaponImporter;
 using QM_WeaponImporter.Templates;
 
@@ -13,6 +14,7 @@ namespace QM_ItemCreatorTool.Model
         {
             weaponDescriptor = new CustomItemContentDescriptor();
             weaponDescriptor.attachedId = ID;
+            _model.itemClass = ItemClass.Weapon.ToString();
         }
 
 
