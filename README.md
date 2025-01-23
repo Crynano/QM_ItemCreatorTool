@@ -28,9 +28,9 @@ If it spawns, success! If it doesn't, send me the logfile located in the mod fol
 · Crynano (https://github.com/Crynano)
 
 ## SPECIAL THANKS & CREDITS
-· Raigir (API, Mod Collaborator & Datamining)
-· Lynchantiure (Beta Testing)
-· NBK_RedSpy (Templates & Data)
+- Raigir (API, Mod Collaborator & Datamining)
+- Lynchantiure (Beta Testing)
+- NBK_RedSpy (Templates & Data)
 
 ## PACKAGES CREDITS
 · Multiselect Combobox - https://github.com/RWS/Multiselect-ComboBox
