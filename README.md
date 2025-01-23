@@ -17,7 +17,7 @@ A window will open, you must navigate to the folder where the base config file a
 My recommendation is an empty folder, or the QM_WeaponImporter mod folder (as it will load files inside automatically)
 QM_WeaponImporter Mod ID is: 3284022031
 
-# Note that "Create Mod" will OVERRIDE all previous configuration files existing
+### Note that "Create Mod" will OVERRIDE all previous configuration files existing
 
 ## TESTING
 And that's it, open the console in the inventory or in a mission and type: 
