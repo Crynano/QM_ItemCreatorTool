@@ -2,35 +2,36 @@
 
 Guide to create mod with the tool
 
-· First, subscribe to the mod [0.8.5] Item Importer in the workshop.
-· Open the tool and add some weapons
-· When you've finished, click "Create Mod" in the "General" Tab
+Â· First, subscribe to the mod [0.8.5] Item Importer in the workshop.
+Â· Open the tool and add some weapons
+Â· When you've finished, click "Create Mod" in the "General" Tab
 	- Select the workshop folder as directory
-· Start the game and use the console to spawn the new weapon!
+Â· Start the game and use the console to spawn the new weapon!
 
-##[IMAGES AND SOUND]
-· Sound is not implemented in the tool, even though you can see the variables there
-· For the paths to images, please copy & paste the full path to the image you want to use, the program will take care of copying and renaming stuff.
+## IMAGES AND SOUND
+Â· For the paths to images or sounds, please copy & paste the full path to the image you want to use, or use the path to navigate to the button
 
-##[CREATE MOD]
+## CREATE MOD
 To create the mod files, press the "Create Mod" in the "General" tab
-A window will open, you must navigate to the folder where the base config file will be created.
-From there, note that many folders and subfolders will be created, so my recommendation is an **empty folder**, or your** own mod folder**
-**Note that "Create Mod" will OVERRIDE all previous configuration files (weapons/descriptors etc) that have **
+A window will open, you must navigate to the folder where the base config file and mod folders containing the data will be created.
+My recommendation is an empty folder, or the QM_WeaponImporter mod folder (as it will load files inside automatically)
+QM_WeaponImporter Mod ID is: 3284022031
 
-Because you'll be using the Weapon Importer library, you must navigate to the workshop path of your computer
-your result path should be something along the lines of:
+# Note that "Create Mod" will OVERRIDE all previous configuration files existing
 
-*(Where you have installed steam, does not matter, the important part is: **workshop/content/2059170/3407014011)***
-C:/ProgramFiles/Steam/steamapps/workshop/content/2059170/3407014011
-
-##[TESTING]
-And that's it, open the console in the inventory or in a mission and type: item "YourWeaponID"
+## TESTING
+And that's it, open the console in the inventory or in a mission and type: 
+	item "YourWeaponID"
 If it spawns, success! If it doesn't, send me the logfile located in the mod folder
 
-##[CREDITS]
-· Crynano (https://github.com/Crynano)
+## CREDITS
+Â· Crynano (https://github.com/Crynano)
 
-##[PACKAGES CREDITS]
-· Multiselect Combobox - https://github.com/RWS/Multiselect-ComboBox
+## SPECIAL THANKS & CREDITS
+Â· Raigir (API, Mod Collaborator & Datamining)
+Â· Lynchantiure (Beta Testing)
+Â· NBK_RedSpy (Templates & Data)
+
+## PACKAGES CREDITS
+Â· Multiselect Combobox - https://github.com/RWS/Multiselect-ComboBox
 
