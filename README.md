@@ -1,12 +1,11 @@
 # QM_ItemCreatorTool
 
-Guide to create mod with the tool
-
-· First, subscribe to the mod [0.8.5] Item Importer in the workshop.
-· Open the tool and add some weapons
-· When you've finished, click "Create Mod" in the "General" Tab
+## Quick Guide
+- First, subscribe to the mod "Item Importer" in the workshop.
+- Open the tool and add configure weapons, receipts and optionally the localization
+- When you've finished, click "Create Mod" in the "General" Tab
 	- Select the workshop folder as directory
-· Start the game and use the console to spawn the new weapon!
+- Start the game and use the console to spawn the new weapon!
 
 ## IMAGES AND SOUND
 · For the paths to images or sounds, please copy & paste the full path to the image you want to use, or use the path to navigate to the button
