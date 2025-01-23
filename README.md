@@ -8,7 +8,10 @@
 - Start the game and use the console to spawn the new weapon!
 
 ## IMAGES AND SOUND
-· For the paths to images or sounds, please copy & paste the full path to the image you want to use, or use the path to navigate to the button
+For the paths to images or sounds, please copy & paste the full path
+or
+Use the provided button to navigate to the file.
+### Note: The mod will manually copy and update the paths
 
 ## CREATE MOD
 To create the mod files, press the "Create Mod" in the "General" tab
