@@ -17,8 +17,7 @@
                 </DockPanel>-->
                 <Button Content="Load Mod" DockPanel.Dock="Top" Margin="5" Height="50" Command="{Binding LoadModCommand}"/>
                 <Button Content="Create Mod" DockPanel.Dock="Top" Margin="5" Height="50" Command="{Binding CreateModCommand}"/>
-                <Separator />
-                <Button Content="_Clear Mod Data" DockPanel.Dock="Top" Margin="5" Height="50" Command="{Binding ClearModCommand}"/>
+                <Button Content="Clear Mod Data" DockPanel.Dock="Top" Margin="5" Height="50" Command="{Binding ClearModCommand}"/>
             </DockPanel>
         </ScrollViewer>
     </DockPanel>

@@ -1,6 +1,6 @@
 ﻿using QM_ItemCreatorTool.Interfaces;
 using QM_ItemCreatorTool.Managers;
-using Spellweaver.Commands;
+using QM_ItemCreatorTool.Commands;
 
 namespace QM_ItemCreatorTool.ViewModel;
 

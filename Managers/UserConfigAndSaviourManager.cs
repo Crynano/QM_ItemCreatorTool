@@ -1,4 +1,5 @@
-﻿using QM_ItemCreatorTool.Model;
+﻿using QM_ItemCreatorTool.Interfaces;
+using QM_ItemCreatorTool.Model;
 using QM_ItemCreatorTool.ViewModel;
 using System.IO;
 
@@ -9,7 +10,7 @@ namespace QM_ItemCreatorTool.Managers
         private string AppFolder => Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "QM_ItemCreatorTool");
 
         private string LastMod => Path.Combine(AppFolder, "lastMod.json");
-
+        private IErrorHandler _errorHandler = new MessageBoxErrorHandler();
 
         public UserConfigAndSaviourManager()
         {
@@ -37,21 +38,28 @@ namespace QM_ItemCreatorTool.Managers
         private bool LoadLastData()
         {
             if (!File.Exists(LastMod)) return false;
+            try
+            {
+                var deserializedMod = FileImporter.LoadAndDeserialize<ModDataModel>(LastMod);
+                deserializedMod.LoadFromDeserialize();
 
-            var deserializedMod = FileImporter.LoadAndDeserialize<ModDataModel>(LastMod);
-            deserializedMod.LoadFromDeserialize();
-
-            if (deserializedMod == null) return false;
-            var viewModel = new ModDataViewModel(deserializedMod);
-            ModInstanceManager.SetMod(viewModel);
-            return true;
+                if (deserializedMod == null) return false;
+                var viewModel = new ModDataViewModel(deserializedMod);
+                ModInstanceManager.SetMod(viewModel);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _errorHandler.ThrowError("Error when loading last saved data.", ex);
+                return false;
+            }
         }
 
         public void Save(object? sender, EventArgs e)
         {
             var data = ModInstanceManager.CurrentMod.GetModel;
             data.PrepareExport();
-            FileImporter.SaveAndDeserialize(LastMod, data);
+            FileImporter.SaveAndSerialize(LastMod, data);
         }
     }
 }

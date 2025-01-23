@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MGSC;
+using Newtonsoft.Json;
 using QM_ItemCreatorTool.Interfaces;
 using QM_ItemCreatorTool.Model;
 using QM_ItemCreatorTool.ViewModel;
@@ -139,12 +140,12 @@ namespace QM_ItemCreatorTool.Managers
                 if (operationLog != string.Empty)
                     _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
             }
-            modifiedModData.Name = configPath;
             return true;
         }
 
         private static string CreateModReport = string.Empty;
-
+        private static string BaseDirectory = string.Empty;
+        private static Dictionary<string, string> FolderPaths = new Dictionary<string, string>();
         public static bool CreateMod(string folderPath, ModDataViewModel modifiedModData)
         {
             CreateModReport = string.Empty;
@@ -157,46 +158,65 @@ namespace QM_ItemCreatorTool.Managers
             }
 
             string baseDirectory = folderPath;
+            BaseDirectory = folderPath;
+            FolderPaths = modifiedModData.Configuration.folderPaths;
             // Attention this process with overwrite all existing config files in this folder.
             //!!!! TODO ADD WARNING !!!!
             /// Print the mastermind first
             // Deserialize the mastermind
-            var configDeserialized = JsonConvert.SerializeObject(modifiedModData.Configuration, Formatting.Indented);
-            File.WriteAllText(Path.Combine(baseDirectory, "global_config.json"), configDeserialized);
+            FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, "global_config.json"), modifiedModData.Configuration);
 
             // Now, create all foldersystem
             foreach (var item in modifiedModData.Configuration.folderPaths.Values)
             {
                 Directory.CreateDirectory(Path.Combine(baseDirectory, item));
             }
-            // T he localization file must be a json, not a folder! Dum dum
-            //foreach (var item in modifiedModData.Configuration.localizationPaths.Values)
-            //{
-            //    Directory.CreateDirectory(Path.Combine(baseDirectory, item));
-            //}
+            // The localization file must be a json, not a folder! Dum dum
+            foreach (var item in modifiedModData.Configuration.localizationPaths.Values)
+            {
+                Directory.CreateDirectory(Path.Combine(baseDirectory, item));
+            }
+            // Descriptors
             var fullDescriptorsPath = Path.Combine(baseDirectory, modifiedModData.Configuration.descriptorsPath);
             Directory.CreateDirectory(fullDescriptorsPath);
 
             // Start deserializing data.
+            string serializedItem = string.Empty;
+
             modifiedModData.Configuration.folderPaths.TryGetValue("rangedweapons", out string? rangedWeaponsRelativePath);
-            string serializedWeapon = string.Empty;
             foreach (var item in modifiedModData.Weapons)
             {
-                serializedWeapon = JsonConvert.SerializeObject(item.GetModel, Formatting.Indented);
-                File.WriteAllText(Path.Combine(baseDirectory, rangedWeaponsRelativePath, item.ID + ".json"), serializedWeapon);
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, rangedWeaponsRelativePath, item.ID + ".json"), item.GetModel);
             }
 
             modifiedModData.Configuration.folderPaths.TryGetValue("meleeweapons", out string? meleeWeaponsRelativePath);
             foreach (var item in modifiedModData.Melee)
             {
-                serializedWeapon = JsonConvert.SerializeObject(item.GetModel, Formatting.Indented);
-                File.WriteAllText(Path.Combine(baseDirectory, meleeWeaponsRelativePath, item.ID + ".json"), serializedWeapon);
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, meleeWeaponsRelativePath, item.ID + ".json"), item.GetModel);
             }
+
+            modifiedModData.Configuration.localizationPaths.TryGetValue("item", out string? localizationFilePath);
+            LocalizationTemplate localizationFile = new LocalizationTemplate();
+            localizationFile.name = new Dictionary<string, Dictionary<string, string>>();
+            localizationFile.shortdesc = new Dictionary<string, Dictionary<string, string>>();
+            foreach (LocalizationViewModel item in modifiedModData.LocalizationEntries)
+            {
+                var currentItemEntries = item.Entries.ToList();
+
+                var nameDictionary = currentItemEntries.Select(x => x.GetName()).ToDictionary();
+                var descDictionary = currentItemEntries.Select(x => x.GetDescription()).ToDictionary();
+
+                localizationFile.name.Add(item.ID, nameDictionary);
+                localizationFile.shortdesc.Add(item.ID, descDictionary);
+            }
+            // Print the localization file
+            FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, localizationFilePath + "/item_localization.json"), localizationFile);
 
             string descriptorsRelativePath = modifiedModData.Configuration.descriptorsPath;
             // Before deserializing, change the paths to be relative ones and include the file name!
             foreach (var item in modifiedModData.GetDescriptors())
             {
+                // Icons
                 item.iconSpritePath = CopyFileToRelative(item.iconSpritePath, baseDirectory, "Assets/Images");
                 item.smallIconSpritePath = CopyFileToRelative(item.smallIconSpritePath, baseDirectory, "Assets/Images");
                 item.shadowOnFloorSpritePath = CopyFileToRelative(item.shadowOnFloorSpritePath, baseDirectory, "Assets/Images");
@@ -206,14 +226,56 @@ namespace QM_ItemCreatorTool.Managers
                 item.failedAttackSoundPath = CopyFileToRelative(item.failedAttackSoundPath, baseDirectory, "Assets/Sounds");
                 item.reloadSoundPath = CopyFileToRelative(item.reloadSoundPath, baseDirectory, "Assets/Sounds");
                 // Finalize
-                string serializedDesc = JsonConvert.SerializeObject(item, Formatting.Indented);
-                File.WriteAllText(Path.Combine(baseDirectory, descriptorsRelativePath, item.attachedId + "_descriptor.json"), serializedDesc);
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, descriptorsRelativePath, item.attachedId + "_descriptor.json"), item);
             }
+
+            // Crafting specs
+            modifiedModData.Configuration.folderPaths.TryGetValue("itemreceipts", out string? craftingSpecsPath);
+            foreach (ItemProduceReceiptTemplate item in modifiedModData.GetCraftingSpecs())
+            {
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, craftingSpecsPath, item.OutputItem + "_receipt.json"), item);
+            }
+
+            modifiedModData.Configuration.folderPaths.TryGetValue("factionconfig", out string? factionPath);
+            FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, factionPath, "FactionData.json"), modifiedModData.GetFactionData());
+
+            // This is for when destroying an object?
+            ExportCategory(modifiedModData.GetItemTransforms(), "itemtransforms", "transformationData");
+            //modifiedModData.Configuration.folderPaths.TryGetValue("itemtransforms", out string? itemTransformPath);
+            //foreach (var item in modifiedModData.GetItemTransforms())
+            //{
+            //    FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, itemTransformPath, item.Id + "_transformationData.json"), item);
+            //}
+
+            ExportCategory(modifiedModData.GetDataDisks(), "datadisks", "diskData");
+            //modifiedModData.Configuration.folderPaths.TryGetValue("datadisks", out string? dataDisksPath);
+            //foreach (var item in modifiedModData.GetDatatisks())
+            //{
+            //    FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, dataDisksPath, item.Id + "_transformationData.json"), item);
+            //}
+
+            // Later we add faction file
 
             if (!string.IsNullOrEmpty(CreateModReport))
                 _errorHandler.ThrowWarning("Errors occurred while creating mod", CreateModReport);
 
             return true;
+        }
+
+        private static void ExportCategory<T>(List<T> exportList, string folderKey, string fileName) where T : ConfigTableRecord
+        {
+            try
+            {
+                FolderPaths.TryGetValue(folderKey, out string? folderPath);
+                foreach (var item in exportList)
+                {
+                    FileImporter.SaveAndSerialize(Path.Combine(BaseDirectory, folderPath, $"{item.Id}_{fileName}.json"), item);
+                }
+            }
+            catch (Exception ex)
+            {
+                _errorHandler.ThrowError("Error when exporting category", ex);
+            }
         }
 
         private static string CopyFileToRelative(string objectPath, string baseDirectory, string relativeDestinationFolderPath)

@@ -1,16 +1,13 @@
 ﻿using QM_ItemCreatorTool.Managers;
 using QM_ItemCreatorTool.Model;
-using Spellweaver.Commands;
+using QM_ItemCreatorTool.Commands;
 using System.Collections.ObjectModel;
+using QM_WeaponImporter;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
-    public class WeaponTabViewModel : ViewModelBase
+    public class WeaponTabViewModel : TabViewModel<WeaponViewModel>
     {
-        #region Data
-        private DataProviderManager _dataProvider;
-        #endregion
-
         public WeaponTabViewModel(DataProviderManager dataProvider)
         {
             _dataProvider = dataProvider;
@@ -18,91 +15,74 @@ namespace QM_ItemCreatorTool.ViewModel
             WeaponClassList = _dataProvider.WeaponClasses;
             WeaponSubclassList = _dataProvider.WeaponSubclasses;
             GripTypesList = _dataProvider.GripTypes;
+            FactionList = _dataProvider.Factions;
+
             _dataProvider.FireModes.ForEach(FireModesList.Add);
             _dataProvider.Categories.ForEach(Tags.Add);
             _dataProvider.Grenades.ForEach(GrenadesList.Add);
+            _dataProvider.Chips.ForEach(ChipList.Add);
 
             // Commands
-            AddWeaponToListCommand = new DelegateCommand(CreateNew, CanExecuteCommand);
-            RemoveWeaponFromListCommand = new DelegateCommand(Remove, CanExecuteCommand);
-            CreateNewWeaponCommand = new DelegateCommand(CreateNew, CanExecuteCommand);
+            AddCommand = new DelegateCommand(Add, CanExecuteCommand);
+            RemoveCommand = new DelegateCommand(Remove, CanExecuteCommand);
+
+            // Images
             SpritePathCommand = new DelegateCommand(GetPathForImage);
             SmallSpritePathCommand = new DelegateCommand(GetPathForSmallImage);
             ShadowSpritePathCommand = new DelegateCommand(GetPathForShadowImage);
+
+            // Sounds
+            GetAttackSoundPathCommand = new DelegateCommand(GetPathForAttackSound);
+            GetReloadSoundPathCommand = new DelegateCommand(GetPathForReloadSound);
+            GetDrySoundPathCommand = new DelegateCommand(GetPathForDrySound);
+            GetFailedSoundPathCommand = new DelegateCommand(GetPathForFailedSound);
+
+            // Faction
+            AddFactionEntryCommand = new DelegateCommand(AddFactionEntry);
+            // Uncrafting
+            AddUncraftingEntryCommand = new DelegateCommand(AddUncraftingEntry);
         }
 
-        #region Selected Weapon
-
-        private WeaponViewModel? _selectedWeapon;
-        public WeaponViewModel? SelectedWeapon
-        {
-            get
-            {
-                return _selectedWeapon;
-            }
-            set
-            {
-                _selectedWeapon = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
 
         #region Collections
-        public ModDataViewModel CurrentMod
-        {
-            get => ModInstanceManager.CurrentMod;
-            set
-            {
-                ModInstanceManager.CurrentMod = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public ObservableCollection<WeaponViewModel> WeaponList { get { return CurrentMod.Weapons; } }
         public List<string> WeaponClassList { get; set; }
         public List<string> WeaponSubclassList { get; set; }
         public List<string> GripTypesList { get; set; }
+        public List<string> FactionList { get; set; }
         public ObservableCollection<string> FireModesList { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> Tags { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> GrenadesList { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> ChipList { get; set; } = new ObservableCollection<string>();
         #endregion
 
         #region Commands
-
-        public DelegateCommand AddWeaponToListCommand { get; }
-        public DelegateCommand RemoveWeaponFromListCommand { get; }
-        public DelegateCommand CreateNewWeaponCommand { get; }
+        public DelegateCommand AddFactionEntryCommand { get; }
+        public DelegateCommand AddUncraftingEntryCommand { get; }
         public DelegateCommand SpritePathCommand { get; }
         public DelegateCommand SmallSpritePathCommand { get; }
         public DelegateCommand ShadowSpritePathCommand { get; }
+        public DelegateCommand GetAttackSoundPathCommand { get; }
+        public DelegateCommand GetReloadSoundPathCommand { get; }
+        public DelegateCommand GetDrySoundPathCommand { get; }
+        public DelegateCommand GetFailedSoundPathCommand { get; }
 
         #region Commands Implementation
-
-        private void Add(object? parameter)
+        protected override void Add(object? parameter)
         {
-            if (SelectedWeapon == null) return;
-            //_modInstanceManager.CurrentMod.AddWeapon();
-            SelectedWeapon = new WeaponViewModel(new QM_WeaponImporter.RangedWeaponTemplate());
+            var newWeapon = new WeaponViewModel(new RangedWeaponTemplate());
+            CurrentMod.AddWeapon(newWeapon);
+            CurrentValue = newWeapon;
         }
-
-        private void Remove(object? parameter)
+        protected override void Remove(object? parameter)
         {
-            if (SelectedWeapon == null) return;
-            var indexOfWeapon = WeaponList.IndexOf(SelectedWeapon) - 1;
-            ModInstanceManager.CurrentMod.RemoveWeapon(SelectedWeapon);
+            if (CurrentValue == null) return;
+            var indexOfWeapon = WeaponList.IndexOf(CurrentValue) - 1;
+            CurrentMod.RemoveWeapon(CurrentValue);
             if (indexOfWeapon >= 0)
-                SelectedWeapon = WeaponList[indexOfWeapon];
+                CurrentValue = WeaponList[indexOfWeapon];
             else
-                SelectedWeapon = WeaponList.FirstOrDefault();
-        }
-
-        private void CreateNew(object? parameter)
-        {
-            var newWeapon = new WeaponViewModel(new QM_WeaponImporter.RangedWeaponTemplate());
-            ModInstanceManager.CurrentMod.AddWeapon(newWeapon);
-            SelectedWeapon = newWeapon;
+                CurrentValue = WeaponList.FirstOrDefault();
         }
 
         private bool CanExecuteCommand(object? obj) => ModInstanceManager.CurrentMod != null;
@@ -110,26 +90,59 @@ namespace QM_ItemCreatorTool.ViewModel
         private void GetPathForImage(object? parameter)
         {
             var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
-            if (path != null && SelectedWeapon != null) SelectedWeapon.SpritePath = path;
+            if (path != null && CurrentValue != null) CurrentValue.SpritePath = path;
         }
 
         private void GetPathForSmallImage(object? parameter)
         {
             var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
-            if (path != null && SelectedWeapon != null) SelectedWeapon.SmallSpritePath = path;
+            if (path != null && CurrentValue != null) CurrentValue.SmallSpritePath = path;
         }
 
         private void GetPathForShadowImage(object? parameter)
         {
             var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
-            if (path != null && SelectedWeapon != null) SelectedWeapon.ShadowSpritePath = path;
+            if (path != null && CurrentValue != null) CurrentValue.ShadowSpritePath = path;
         }
+
+        private void GetPathForReloadSound(object? obj)
+        {
+            var path = GetPath("Select a sound file", "Sound files (*.wav)|*.wav");
+            if (path != null && CurrentValue != null) CurrentValue.ReloadSoundPath = path;
+        }
+        private void GetPathForAttackSound(object? obj)
+        {
+            var path = GetPath("Select a sound file", "Sound files (*.wav)|*.wav");
+            if (path != null && CurrentValue != null) CurrentValue.AttackSoundPath = path;
+        }
+        private void GetPathForFailedSound(object? obj)
+        {
+            var path = GetPath("Select a sound file", "Sound files (*.wav)|*.wav");
+            if (path != null && CurrentValue != null) CurrentValue.FailedAttackSoundPath = path;
+        }
+        private void GetPathForDrySound(object? obj)
+        {
+            var path = GetPath("Select a sound file", "Sound files (*.wav)|*.wav");
+            if (path != null && CurrentValue != null) CurrentValue.DryShotSoundPath = path;
+        }
+
         // For the path searching
         private string? GetPath(string title, string extension)
         {
             return FolderExplorerManager.GetPathToFile(title, extension);
         }
 
+        // Faction
+        private void AddFactionEntry(object? obj)
+        {
+            // Add faction Entry
+            CurrentValue?.AddFactionRule();
+        }
+        private void AddUncraftingEntry(object? obj)
+        {
+            // Add faction Entry
+            CurrentValue?.AddUncraftingEntry();
+        }
         #endregion
 
         #endregion

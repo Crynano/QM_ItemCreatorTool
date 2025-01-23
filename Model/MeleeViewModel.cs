@@ -5,109 +5,18 @@ using QM_WeaponImporter.Templates;
 
 namespace QM_ItemCreatorTool.Model
 {
-    public class MeleeViewModel : ViewModelBase<MeleeWeaponTemplate>
+    public class MeleeViewModel : QMItemViewModel<MeleeWeaponTemplate>
     {
         // Here lie all the properties for the model?
-        private CustomItemContentDescriptor weaponDescriptor;
+        public MeleeViewModel() : base()
+        {
+
+        }
 
         public MeleeViewModel(MeleeWeaponTemplate model) : base(model)
         {
-            weaponDescriptor = new CustomItemContentDescriptor();
             weaponDescriptor.attachedId = ID;
             _model.itemClass = ItemClass.Weapon.ToString();
-        }
-
-
-        public string? SpritePath
-        {
-            get => weaponDescriptor.iconSpritePath;
-            set
-            {
-                weaponDescriptor.iconSpritePath = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string? SmallSpritePath
-        {
-            get => weaponDescriptor.smallIconSpritePath;
-            set
-            {
-                weaponDescriptor.smallIconSpritePath = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string? ShadowSpritePath
-        {
-            get => weaponDescriptor.shadowOnFloorSpritePath;
-            set
-            {
-                weaponDescriptor.shadowOnFloorSpritePath = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string? InheritedID
-        {
-            get => weaponDescriptor.baseItemId;
-            set
-            {
-                weaponDescriptor.baseItemId = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string? ID
-        {
-            get => _model.id;
-            set
-            {
-                _model.id = value;
-                weaponDescriptor.attachedId = value;
-                RaisePropertyChanged();
-            }
-        }
-        public float Price
-        {
-            get => _model.price;
-            set { _model.price = value; RaisePropertyChanged(); }
-        }
-        public float Weight
-        {
-            get => _model.weight;
-            set { _model.weight = value; RaisePropertyChanged(); }
-        }
-        // Tags
-        public List<string> Categories
-        {
-            get => _model.categories;
-            set
-            {
-                _model.categories = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int TechLevel
-        {
-            get => _model.techLevel;
-            set
-            {
-                _model.techLevel = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
-        public int InventoryWidth
-        {
-            get => _model.inventoryWidthSize;
-            set
-            {
-                _model.inventoryWidthSize = value;
-                RaisePropertyChanged();
-            }
         }
 
         public string? WeaponClass
@@ -166,16 +75,6 @@ namespace QM_ItemCreatorTool.Model
             set
             {
                 _model.bonusAccuracy = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int Range
-        {
-            get => _model.range;
-            set
-            {
-                _model.range = value;
                 RaisePropertyChanged();
             }
         }
@@ -280,89 +179,53 @@ namespace QM_ItemCreatorTool.Model
         public int FractureWoundDamageBonus
         {
             get => _model.fractureWoundDamageBonus;
-            set
-            {
-                _model.fractureWoundDamageBonus = value;
-                RaisePropertyChanged();
-            }
+            set { _model.fractureWoundDamageBonus = value; RaisePropertyChanged(); }
         }
-
         public float PainDamageMultiplier
         {
             get => _model.painDamageMultiplier;
-            set
-            {
-                _model.painDamageMultiplier = value;
-                RaisePropertyChanged();
-            }
+            set { _model.painDamageMultiplier = value; RaisePropertyChanged(); }
         }
-
         public float CritPainDamageMultiplier
         {
             get => _model.critPainDamageMultiplier;
-            set
-            {
-                _model.critPainDamageMultiplier = value;
-                RaisePropertyChanged();
-            }
+            set { _model.critPainDamageMultiplier = value; RaisePropertyChanged(); }
         }
-
         public float OffSlotCritChance
         {
             get => _model.offSlotCritChance;
-            set
-            {
-                _model.offSlotCritChance = value;
-                RaisePropertyChanged();
-            }
+            set { _model.offSlotCritChance = value; RaisePropertyChanged(); }
         }
-
         public float MinDmgCapBonus
         {
             get => _model.minDmgCapBonus;
-            set
-            {
-                _model.minDmgCapBonus = value;
-                RaisePropertyChanged();
-            }
+            set { _model.minDmgCapBonus = value; RaisePropertyChanged(); }
         }
-
         public float FovLookAngleMult
         {
             get => _model.fovLookAngleMult;
-            set
-            {
-                _model.fovLookAngleMult = value;
-                RaisePropertyChanged();
-            }
+            set { _model.fovLookAngleMult = value; RaisePropertyChanged(); }
         }
-
         public string? Grip
         {
             get => _model.grip;
-            set
-            {
-                _model.grip = value;
-                RaisePropertyChanged();
-            }
+            set { _model.grip = value; RaisePropertyChanged(); }
         }
-
         public bool HasBFGOverlay
         {
             get => _model.hasHFGOverlay;
-            set
-            {
-                _model.hasHFGOverlay = value;
-                RaisePropertyChanged();
-            }
+            set { _model.hasHFGOverlay = value; RaisePropertyChanged(); }
         }
         public int Durability
         {
             get { return _model.maxDurability; }
             set { _model.maxDurability = value; RaisePropertyChanged(); }
         }
-
-        // Melee Related
+        public bool Unbreakable
+        {
+            get { return _model.unbreakable; }
+            set { _model.unbreakable = value; RaisePropertyChanged(); }
+        }
         public bool DoesMeleeSplash
         {
             get { return _model.doesMeleeSplash; }
@@ -383,7 +246,6 @@ namespace QM_ItemCreatorTool.Model
             get { return _model.doesThrowPierce; }
             set { _model.doesThrowPierce = value; RaisePropertyChanged(); }
         }
-
         public int ThrowRange
         {
             get { return _model.throwRange; }

@@ -1,20 +1,16 @@
 ﻿using QM_ItemCreatorTool.Managers;
 using QM_ItemCreatorTool.Model;
 using QM_WeaponImporter;
-using Spellweaver.Commands;
+using QM_ItemCreatorTool.Commands;
 using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
-    public class MeleeTabViewModel : ViewModelBase
+    public class MeleeTabViewModel : TabViewModel<MeleeViewModel>
     {
-        #region Data
-        private DataProviderManager _dataProvider;
-        #endregion
-
         public MeleeTabViewModel(DataProviderManager dataProvider)
         {
-            _dataProvider = dataProvider;
+            this._dataProvider = dataProvider;
 
             WeaponClassList = _dataProvider.WeaponClasses;
             WeaponSubclassList = _dataProvider.WeaponSubclasses;
@@ -22,9 +18,9 @@ namespace QM_ItemCreatorTool.ViewModel
             _dataProvider.Categories.ForEach(Tags.Add);
 
             // Commands
-            AddWeaponToListCommand = new DelegateCommand(CreateNew, CanExecuteCommand);
-            RemoveWeaponFromListCommand = new DelegateCommand(Remove, CanExecuteCommand);
-            CreateNewWeaponCommand = new DelegateCommand(CreateNew, CanExecuteCommand);
+            AddCommand = new DelegateCommand(Add, CanExecuteCommand);
+            RemoveCommand = new DelegateCommand(Remove, CanExecuteCommand);
+
             SpritePathCommand = new DelegateCommand(GetPathForImage);
             SmallSpritePathCommand = new DelegateCommand(GetPathForSmallImage);
             ShadowSpritePathCommand = new DelegateCommand(GetPathForShadowImage);
@@ -32,33 +28,10 @@ namespace QM_ItemCreatorTool.ViewModel
 
         #region Selected Weapon
 
-        private MeleeViewModel? _selectedWeapon;
-        public MeleeViewModel? SelectedWeapon
-        {
-            get
-            {
-                return _selectedWeapon;
-            }
-            set
-            {
-                _selectedWeapon = value;
-                RaisePropertyChanged();
-            }
-        }
 
         #endregion
 
         #region Collections
-        public ModDataViewModel CurrentMod
-        {
-            get => ModInstanceManager.CurrentMod;
-            set
-            {
-                ModInstanceManager.CurrentMod = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public ObservableCollection<MeleeViewModel> WeaponList { get { return CurrentMod.Melee; } }
         public List<string> WeaponClassList { get; set; }
         public List<string> WeaponSubclassList { get; set; }
@@ -67,39 +40,26 @@ namespace QM_ItemCreatorTool.ViewModel
         #endregion
 
         #region Commands
-
-        public DelegateCommand AddWeaponToListCommand { get; }
-        public DelegateCommand RemoveWeaponFromListCommand { get; }
-        public DelegateCommand CreateNewWeaponCommand { get; }
         public DelegateCommand SpritePathCommand { get; }
         public DelegateCommand SmallSpritePathCommand { get; }
         public DelegateCommand ShadowSpritePathCommand { get; }
 
         #region Commands Implementation
-
-        private void Add(object? parameter)
-        {
-            if (SelectedWeapon == null) return;
-            //_modInstanceManager.CurrentMod.AddWeapon();
-            SelectedWeapon = new MeleeViewModel(new MeleeWeaponTemplate());
-        }
-
-        private void Remove(object? parameter)
-        {
-            if (SelectedWeapon == null) return;
-            var indexOfWeapon = WeaponList.IndexOf(SelectedWeapon) - 1;
-            ModInstanceManager.CurrentMod.RemoveMelee(SelectedWeapon);
-            if (indexOfWeapon >= 0)
-                SelectedWeapon = WeaponList[indexOfWeapon];
-            else
-                SelectedWeapon = WeaponList.FirstOrDefault();
-        }
-
-        private void CreateNew(object? parameter)
+        protected override void Add(object? parameter)
         {
             var newWeapon = new MeleeViewModel(new MeleeWeaponTemplate());
             ModInstanceManager.CurrentMod.AddMelee(newWeapon);
-            SelectedWeapon = newWeapon;
+            CurrentValue = newWeapon;
+        }
+        protected override void Remove(object? parameter)
+        {
+            if (CurrentValue == null) return;
+            var indexOfWeapon = WeaponList.IndexOf(CurrentValue) - 1;
+            ModInstanceManager.CurrentMod.RemoveMelee(CurrentValue);
+            if (indexOfWeapon >= 0)
+                CurrentValue = WeaponList[indexOfWeapon];
+            else
+                CurrentValue = WeaponList.FirstOrDefault();
         }
 
         private bool CanExecuteCommand(object? obj) => ModInstanceManager.CurrentMod != null;
@@ -107,19 +67,19 @@ namespace QM_ItemCreatorTool.ViewModel
         private void GetPathForImage(object? parameter)
         {
             var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
-            if (path != null && SelectedWeapon != null) SelectedWeapon.SpritePath = path;
+            if (path != null && CurrentValue != null) CurrentValue.SpritePath = path;
         }
 
         private void GetPathForSmallImage(object? parameter)
         {
             var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
-            if (path != null && SelectedWeapon != null) SelectedWeapon.SmallSpritePath = path;
+            if (path != null && CurrentValue != null) CurrentValue.SmallSpritePath = path;
         }
 
         private void GetPathForShadowImage(object? parameter)
         {
             var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
-            if (path != null && SelectedWeapon != null) SelectedWeapon.ShadowSpritePath = path;
+            if (path != null && CurrentValue != null) CurrentValue.ShadowSpritePath = path;
         }
         // For the path searching
         private string? GetPath(string title, string extension)

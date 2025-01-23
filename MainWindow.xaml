@@ -27,6 +27,12 @@
         <DataTemplate DataType="{x:Type ViewModels:GeneralTabViewModel}">
             <Tabs:GeneralTabView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type ViewModels:ItemReceiptTabViewModel}">
+            <Tabs:ItemReceiptTabView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type ViewModels:LocalizationTabViewModel}">
+            <Tabs:LocalizationTabView/>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -56,18 +62,21 @@
             <TabItem Header="General">
                 <ContentControl Content="{Binding Path=GeneralTabViewModel}"/>
             </TabItem>
-            <TabItem Header="Melee Weapons">
+            <!--<TabItem Header="Melee Weapons">
                 <ContentControl Content="{Binding Path=MeleeTabViewModel}"/>
-            </TabItem>
+            </TabItem>-->
             <TabItem Header="Ranged Weapons">
                 <ContentControl Content="{Binding Path=WeaponTabViewModel}"/>
             </TabItem>
-            <!--<TabItem Header="Melee Weapons">
-                <Tabs:WeaponsTabView/>
+            <TabItem Header="Receipts">
+                <ContentControl Content="{Binding Path=ItemReceiptTabViewModel}"/>
             </TabItem>
-            <TabItem Header="Ammo">
-
-            </TabItem>-->
+            <TabItem Header="Localization">
+                <ContentControl Content="{Binding Path=LocalizationTabViewModel}"/>
+            </TabItem>
+            <!--<TabItem Header="Faction">
+                <ContentControl Content="{Binding Path=FactionTabViewModel}"/>
+            </TabItem-->
         </TabControl>
     </Grid>
 </Window>

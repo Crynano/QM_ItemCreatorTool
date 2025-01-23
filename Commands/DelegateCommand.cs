@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace Spellweaver.Commands
+namespace QM_ItemCreatorTool.Commands
 {
     public class DelegateCommand : ICommand
     {

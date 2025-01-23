@@ -22,7 +22,7 @@
                     <Setter Property="Visibility" Value="Hidden"/>
                     <Setter Property="IsEnabled" Value="False"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=SelectedWeapon, TargetNullValue=True}" Value="True">
+                        <DataTrigger Binding="{Binding Path=CurrentValue, TargetNullValue=True}" Value="True">
                             <Setter Property="Visibility" Value="Visible"/>
                             <Setter Property="IsEnabled" Value="True"/>
                         </DataTrigger>
@@ -31,9 +31,7 @@
             </DockPanel.Style>
             <Button Content="New Weapon" HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Width="100" Height="25"
-                    Command="{Binding CreateNewWeaponCommand}">
-
-            </Button>
+                    Command="{Binding AddCommand}"/>
         </DockPanel>
         <ScrollViewer>
             <ScrollViewer.Resources>
@@ -44,7 +42,7 @@
             <ScrollViewer.Style>
                 <Style TargetType="ScrollViewer">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=SelectedWeapon, TargetNullValue=True}" Value="True">
+                        <DataTrigger Binding="{Binding Path=CurrentValue, TargetNullValue=True}" Value="True">
                             <Setter Property="Visibility" Value="Hidden"/>
                             <Setter Property="IsEnabled" Value="False"/>
                         </DataTrigger>
@@ -54,19 +52,19 @@
             <DockPanel Margin="5" LastChildFill="False">
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="ID" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Base ID" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.InheritedID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.InheritedID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Price" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Weight" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.Weight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.Weight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Image Path" DockPanel.Dock="Top"/>
@@ -74,7 +72,7 @@
                         <Button DockPanel.Dock="Right"
                                 Content="Path"
                                 Command="{Binding SpritePathCommand}"/>
-                        <TextBox HorizontalAlignment="Stretch" Text="{Binding SelectedWeapon.SpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox HorizontalAlignment="Stretch" Text="{Binding CurrentValue.SpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </DockPanel>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
@@ -83,7 +81,7 @@
                         <Button DockPanel.Dock="Right"
                                 Content="Path"
                                 Command="{Binding SmallSpritePathCommand}"/>
-                        <TextBox HorizontalAlignment="Stretch" Text="{Binding SelectedWeapon.SmallSpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox HorizontalAlignment="Stretch" Text="{Binding CurrentValue.SmallSpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </DockPanel>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
@@ -92,165 +90,165 @@
                         <Button DockPanel.Dock="Right"
                                 Content="Path"
                                 Command="{Binding ShadowSpritePathCommand}"/>
-                        <TextBox HorizontalAlignment="Stretch" Text="{Binding SelectedWeapon.ShadowSpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox HorizontalAlignment="Stretch" Text="{Binding CurrentValue.ShadowSpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </DockPanel>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Enemy Spawn Tags (Categories)" DockPanel.Dock="Top"></TextBlock>
                     <!--<controls:MultiSelectCombobox ItemSource="{Binding Tags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                  SelectedItems="{Binding SelectedWeapon.Categories, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedItems="{Binding CurrentValue.Categories, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   ItemSeparator=","
                                     LookUpContract="{Binding TagsLookupContract}"/>-->
                     <sdl:MultiSelectComboBox
                             ItemsSource="{Binding Tags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedItems="{Binding SelectedWeapon.Categories, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItems="{Binding CurrentValue.Categories, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             SelectionMode="Multiple"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Inventory Width" DockPanel.Dock="Top"/>
-                    <TextBox DockPanel.Dock="Right" Margin="8,0,0,0" Width="40" Text="{Binding SelectedWeapon.InventoryWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <TextBox DockPanel.Dock="Right" Margin="8,0,0,0" Width="40" Text="{Binding CurrentValue.InventoryWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Slider Minimum="1" Maximum="2" 
                             SelectionStart="1"
                             TickPlacement="BottomRight"
-                            Value="{Binding SelectedWeapon.InventoryWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            Value="{Binding CurrentValue.InventoryWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Tech Level" DockPanel.Dock="Top"/>
-                    <TextBox DockPanel.Dock="Right" Margin="8,0,0,0" Width="40" Text="{Binding SelectedWeapon.TechLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <TextBox DockPanel.Dock="Right" Margin="8,0,0,0" Width="40" Text="{Binding CurrentValue.TechLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Slider Minimum="0" Maximum="10" 
                             SelectionStart="0"
                             TickFrequency="1"
                             TickPlacement="BottomRight"
-                            Value="{Binding SelectedWeapon.TechLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            Value="{Binding CurrentValue.TechLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Weapon Class" DockPanel.Dock="Top"/>
                     <ComboBox ItemsSource="{Binding Path=WeaponClassList}"
-                              SelectedItem="{Binding SelectedWeapon.WeaponClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                              SelectedItem="{Binding CurrentValue.WeaponClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Weapon Subclass" DockPanel.Dock="Top"/>
                     <ComboBox ItemsSource="{Binding Path=WeaponSubclassList}"
-                                SelectedItem="{Binding SelectedWeapon.WeaponSubClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                SelectedItem="{Binding CurrentValue.WeaponSubClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Grip Type" DockPanel.Dock="Top"/>
                     <ComboBox ItemsSource="{Binding Path=GripTypesList}"
-                                SelectedItem="{Binding SelectedWeapon.Grip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                SelectedItem="{Binding CurrentValue.Grip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Required Ammo ID" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.RequiredAmmo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.RequiredAmmo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Override Ammo ID" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.OverrideAmmo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.OverrideAmmo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Default Ammo ID" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.DefaultAmmoId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.DefaultAmmoId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Minimum Damage" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.MinDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.MinDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Maximum Damage" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.MaxDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.MaxDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Critical Chance" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.CriticalChance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.CriticalChance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Critical Damage" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.CriticalDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.CriticalDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Damage Over Time Wound Damage Bonus" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.DotWoundsDamageBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.DotWoundsDamageBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Fracture Wound Damage Bonus" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.FractureWoundDamageBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.FractureWoundDamageBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Pain Damage Multiplier" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.PainDamageMultiplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.PainDamageMultiplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Off-Slot Critical Chance Bonus" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.OffSlotCritChance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.OffSlotCritChance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Minimum Damage Cap Bonus (?)" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.MinDmgCapBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.MinDmgCapBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Field of View Angle Multiplier" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.FovLookAngleMult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.FovLookAngleMult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="BFG Overlay" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.HasBFGOverlay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.HasBFGOverlay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <!--Melee Specific-->
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Melee Splashes to nearby enemies" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.DoesMeleeSplash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.DoesMeleeSplash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Can be Thrown" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.CanThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.CanThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <!--<DockPanel.Triggers>
-                        <DataTrigger Binding="{Binding SelectedWeapon.CanThrow}" Value="False">
+                        <DataTrigger Binding="{Binding CurrentValue.CanThrow}" Value="False">
                             <Setter Property="Visibility" Value="Hidden"/>
                         </DataTrigger>
                     </DockPanel.Triggers>-->
                     <TextBlock Text="Throw Range" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.ThrowRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.ThrowRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Guaranteed Hit on Throw" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.GuaranteedThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.GuaranteedThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Durability" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.Durability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.Durability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Durability Loss on Throw" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.DurabilityLossOnThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.DurabilityLossOnThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Piercing Throw" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.PiercingThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.PiercingThrow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Can amputate" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.CanAmputate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.CanAmputate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Amputation on Wound" DockPanel.Dock="Top"/>
-                    <CheckBox IsChecked="{Binding SelectedWeapon.AmputateOnWound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.AmputateOnWound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Shooting Sound Path" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.AttackSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.AttackSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Dry Shot Sound Path" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.DryShotSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.DryShotSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Failed Attack Sound Path" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.FailedAttackSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.FailedAttackSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Reload Sound Path" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding SelectedWeapon.ReloadSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding CurrentValue.ReloadSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
             </DockPanel>
         </ScrollViewer>
@@ -265,15 +263,11 @@
                         <Setter Property="Margin" Value="0,2,0,0"/>
                     </Style>
                 </Grid.Resources>
-                <Button Content="Add new weapon" Grid.Column="0" Command="{Binding AddWeaponToListCommand}"></Button>
-                <Button Content="Remove weapon" Grid.Column="1" Command="{Binding RemoveWeaponFromListCommand}"></Button>
+                <Button Content="Add new weapon" Grid.Column="0" Command="{Binding AddCommand}"/>
+                <Button Content="Remove weapon" Grid.Column="1" Command="{Binding RemoveCommand}"/>
             </Grid>
             <!--Weapon List-->
-            <ListView DisplayMemberPath="ID"
-                        ItemsSource="{Binding WeaponList, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding SelectedWeapon}">
-
-            </ListView>
+            <ListView DisplayMemberPath="ID" ItemsSource="{Binding WeaponList, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentValue}"/>
         </DockPanel>
     </Grid>
 </UserControl>

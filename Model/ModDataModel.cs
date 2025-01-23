@@ -1,7 +1,5 @@
 ﻿using QM_WeaponImporter;
-using QM_WeaponImporter.Templates;
 using System.Collections.ObjectModel;
-using Newtonsoft.Json;
 
 namespace QM_ItemCreatorTool.Model
 {
@@ -10,51 +8,81 @@ namespace QM_ItemCreatorTool.Model
     [Serializable]
     public class ModDataModel
     {
-        public string Name { get; set; } = "Default ModDataModel";
-
         public ModDataModel()
         {
-            WeaponList = new ObservableCollection<WeaponViewModel>();
-            MeleeList = new ObservableCollection<MeleeViewModel>();
+
         }
 
-        public ConfigTemplate config = new ConfigTemplate();
-        public List<CustomItemContentDescriptor> descriptors = new List<CustomItemContentDescriptor>();
-        // When exporting, we populate this.
-        [JsonIgnore]
-        public ObservableCollection<WeaponViewModel> WeaponList;
-        [JsonIgnore]
-        public ObservableCollection<MeleeViewModel> MeleeList;
+        #region App Collections
+        //[JsonIgnore]
+        public ObservableCollection<WeaponViewModel> WeaponList = new ObservableCollection<WeaponViewModel>();
+        //[JsonIgnore]
+        public ObservableCollection<MeleeViewModel> MeleeList = new ObservableCollection<MeleeViewModel>();
+        //[JsonIgnore]
+        public ObservableCollection<ItemProduceViewModel> ItemReceipts = new ObservableCollection<ItemProduceViewModel>();
+        //[JsonIgnore]
+        public ObservableCollection<LocalizationViewModel> LocalizationEntries = new ObservableCollection<LocalizationViewModel>();
+        #endregion
 
-        public List<RangedWeaponTemplate> RangedWeaponList = new List<RangedWeaponTemplate>();
-        public List<MeleeWeaponTemplate> MeleeWeaponList = new List<MeleeWeaponTemplate>();
+        public ConfigTemplate config = new ConfigTemplate();
+
+        // When exporting, we populate this.
+        #region Exporting Lists
+        //public List<CustomItemContentDescriptor> descriptors = new List<CustomItemContentDescriptor>();
+        //public List<RangedWeaponTemplate> RangedWeaponList = new List<RangedWeaponTemplate>();
+        //public List<MeleeWeaponTemplate> MeleeWeaponList = new List<MeleeWeaponTemplate>();
+        //public List<ItemProduceReceiptTemplate> ItemReceiptsList = new List<ItemProduceReceiptTemplate>();
+        //public List<LocalizationViewModel> LocalizationList = new List<LocalizationViewModel>();
+        #endregion
 
         public void PrepareExport()
         {
-            foreach (var weapon in WeaponList)
+            //foreach (var weapon in WeaponList)
+            //{
+            //    descriptors.Add(weapon.GetDescriptor());
+            //}
+            //foreach (var weapon in MeleeList)
+            //{
+            //    descriptors.Add(weapon.GetDescriptor());
+            //}
+            foreach (var item in ItemReceipts)
             {
-                RangedWeaponList.Add(weapon.GetModel);
-                descriptors.Add(weapon.GetDescriptor());
-            }
-            foreach (var weapon in MeleeList)
-            {
-                MeleeWeaponList.Add(weapon.GetModel);
-                descriptors.Add(weapon.GetDescriptor());
+                item.PrepareExport();
             }
         }
 
         public void LoadFromDeserialize()
         {
-            if (RangedWeaponList != null) 
-                RangedWeaponList.ForEach(x => WeaponList.Add(new WeaponViewModel(x)));
-            if (MeleeWeaponList != null)
-                MeleeWeaponList.ForEach(x => MeleeList.Add(new MeleeViewModel(x)));
-
-            foreach (var descriptor in descriptors)
+            try
             {
-                WeaponList.ToList().Find(x => x.ID.Equals(descriptor.attachedId))?.SetDescriptor(descriptor);
-                // Just in case? Double the fun? Double the processing capabilities
-                MeleeList.ToList().Find(x => x.ID.Equals(descriptor.attachedId))?.SetDescriptor(descriptor);
+                //if (RangedWeaponList != null)
+                //    RangedWeaponList.ForEach(x => WeaponList.Add(new WeaponViewModel(x)));
+                //if (MeleeWeaponList != null)
+                //    MeleeWeaponList.ForEach(x => MeleeList.Add(new MeleeViewModel(x)));
+                //if (ItemReceiptsList != null)
+                //{
+                //    foreach (var item in ItemReceiptsList)
+                //    {
+                //        ConfigTableRecordTemplate foundItem = RangedWeaponList?.ToList().Find(x => x.id.Equals(item.Id));
+                //        if (foundItem == null)
+                //        {
+                //            foundItem = MeleeWeaponList?.Find(x => x.id.Equals(item.Id));
+                //        }
+                //        if (foundItem == null) continue;
+                //        ItemReceipts.Add(new ItemProduceViewModel(new ItemProduceReceiptTemplate(), foundItem.id));
+                //    }
+                //}
+
+                //foreach (var descriptor in descriptors)
+                //{
+                //    WeaponList.ToList().Find(x => x.ID.Equals(descriptor.attachedId))?.SetDescriptor(descriptor);
+                //    // Just in case? Double the fun? Double the processing capabilities
+                //    MeleeList.ToList().Find(x => x.ID.Equals(descriptor.attachedId))?.SetDescriptor(descriptor);
+                //}
+            }
+            catch (Exception ex)
+            {
+                // Ignore???
             }
         }
     }

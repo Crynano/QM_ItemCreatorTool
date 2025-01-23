@@ -27,5 +27,12 @@ namespace QM_ItemCreatorTool.Managers
         // Some grenades
         private Lazy<List<string>> _grenades = new Lazy<List<string>>(() => new GrenadesProvider().GetData().ToList());
         public List<string> Grenades { get { return _grenades.Value; } }
+
+        // Factions
+        private Lazy<List<string>> _factions = new Lazy<List<string>>(() => new FactionsProvider().GetData().ToList());
+        public List<string> Factions { get { return _factions.Value; } }
+        // Chips in-game
+        private Lazy<List<string>> _chips = new Lazy<List<string>>(() => new ChipsProvider().GetData().ToList());
+        public List<string> Chips { get { return _chips.Value; } }
     }
 }

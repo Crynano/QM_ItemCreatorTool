@@ -22,8 +22,15 @@ internal static class FileImporter
         }
     }
 
-    public static void SaveAndDeserialize<T>(string path, T content) where T : class
+    public static void SaveAndSerialize<T>(string path, T content) where T : class
     {
-        File.WriteAllText(path, JsonConvert.SerializeObject(content, Formatting.Indented));
+        try
+        {
+            File.WriteAllText(path, JsonConvert.SerializeObject(content, Formatting.Indented));
+        }
+        catch (Exception ex)
+        {
+            errorHandler.ThrowError($"Error upon serializing content", ex);
+        }
     }
 }

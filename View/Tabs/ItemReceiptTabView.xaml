@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="QM_ItemCreatorTool.View.Tabs.LocalizationTabView"
+﻿<UserControl x:Class="QM_ItemCreatorTool.View.Tabs.ItemReceiptTabView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -29,7 +29,7 @@
                     </Style.Triggers>
                 </Style>
             </DockPanel.Style>
-            <Button Content="Add new entry" HorizontalAlignment="Center" VerticalAlignment="Center" 
+            <Button Content="Add new receipt" HorizontalAlignment="Center" VerticalAlignment="Center" 
                      Width="100" Height="25"
                      Command="{Binding AddCommand}"/>
         </DockPanel>
@@ -50,22 +50,39 @@
                 </Style>
             </ScrollViewer.Style>
             <DockPanel Margin="5" LastChildFill="False">
-                <DockPanel DockPanel.Dock="Top" Margin="3">
+                <!--<DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Item ID" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding CurrentValue.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>-->
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Crafted Item ID" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.OutputItemId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Localization Entries" DockPanel.Dock="Top"/>
-                    <!--<Button Content="Create new" HorizontalAlignment="Stretch" Command="{Binding AddIngredient}" DockPanel.Dock="Bottom"></Button>-->
-                    <DataGrid ItemsSource="{Binding CurrentValue.Entries, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                              AutoGenerateColumns="False" GridLinesVisibility="None"
-                              CanUserAddRows="False" CanUserDeleteRows="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Language" Binding="{Binding Language, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <TextBlock Text="Required Items" DockPanel.Dock="Top"/>
+                    <Button Content="Create new" HorizontalAlignment="Stretch" Command="{Binding AddIngredient}" DockPanel.Dock="Bottom"></Button>
+                    <DataGrid ItemsSource="{Binding CurrentValue.RequiredItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="True" CanUserAddRows="True" GridLinesVisibility="None"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Crafting Time (Hours)" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.ProductionTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Modify Start Cost" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.ModifyStartCost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Modify Step" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.ModifyStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Modify Level Limit" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.ModifyLevelLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Modify Items Grades" DockPanel.Dock="Top"/>
+                    <Button Content="Create new" HorizontalAlignment="Stretch" Command="{Binding AddItemGrade}" DockPanel.Dock="Bottom"></Button>
+                    <DataGrid ItemsSource="{Binding CurrentValue.ModifyItemsGrades, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="True" CanUserAddRows="True" GridLinesVisibility="None"/>
                 </DockPanel>
             </DockPanel>
         </ScrollViewer>
@@ -80,11 +97,11 @@
                         <Setter Property="Margin" Value="0,2,0,0"/>
                     </Style>
                 </Grid.Resources>
-                <Button Content="Add new entry" Grid.Column="0" Command="{Binding AddCommand}"></Button>
-                <Button Content="Remove entry" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
+                <Button Content="Add new receipt" Grid.Column="0" Command="{Binding AddCommand}"></Button>
+                <Button Content="Remove receipt" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
             </Grid>
             <!--Weapon List-->
-            <ListView DisplayMemberPath="ID" ItemsSource="{Binding LocalizationEntries, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentValue}"/>
+            <ListView DisplayMemberPath="OutputItemId" ItemsSource="{Binding ItemReceipts, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentValue}"/>
         </DockPanel>
     </Grid>
 </UserControl>

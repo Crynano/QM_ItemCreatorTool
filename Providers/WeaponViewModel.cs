@@ -1,114 +1,24 @@
 ﻿using MGSC;
+using QM_ItemCreatorTool.Properties;
 using QM_ItemCreatorTool.ViewModel;
 using QM_WeaponImporter;
 using QM_WeaponImporter.Templates;
+using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.Model
 {
-    public class WeaponViewModel : ViewModelBase<RangedWeaponTemplate>
+    public class WeaponViewModel : QMItemViewModel<RangedWeaponTemplate>
     {
         // Here lie all the properties for the model?
-        private CustomItemContentDescriptor weaponDescriptor;
-
-        public WeaponViewModel(RangedWeaponTemplate model) : base(model)
+        public WeaponViewModel() : base() 
         {
-            weaponDescriptor = new CustomItemContentDescriptor();
-            weaponDescriptor.attachedId = ID;
             _model.itemClass = ItemClass.Weapon.ToString();
         }
 
-
-        public string? SpritePath
+        public WeaponViewModel(RangedWeaponTemplate model) : base(model)
         {
-            get => weaponDescriptor.iconSpritePath;
-            set
-            {
-                weaponDescriptor.iconSpritePath = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string? SmallSpritePath
-        {
-            get => weaponDescriptor.smallIconSpritePath;
-            set
-            {
-                weaponDescriptor.smallIconSpritePath = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string? ShadowSpritePath
-        {
-            get => weaponDescriptor.shadowOnFloorSpritePath;
-            set
-            {
-                weaponDescriptor.shadowOnFloorSpritePath = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string? InheritedID
-        {
-            get => weaponDescriptor.baseItemId;
-            set
-            {
-                weaponDescriptor.baseItemId = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string? ID
-        {
-            get => _model.id;
-            set
-            {
-                _model.id = value;
-                weaponDescriptor.attachedId = value;
-                RaisePropertyChanged();
-            }
-        }
-        public float Price
-        {
-            get => _model.price;
-            set { _model.price = value; RaisePropertyChanged(); }
-        }
-        public float Weight
-        {
-            get => _model.weight;
-            set { _model.weight = value; RaisePropertyChanged(); }
-        }
-
-        // Tags
-        public List<string> Categories
-        {
-            get => _model.categories;
-            set
-            {
-                _model.categories = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public int TechLevel
-        {
-            get => _model.techLevel;
-            set
-            {
-                _model.techLevel = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
-        public int InventoryWidth
-        {
-            get => _model.inventoryWidthSize;
-            set
-            {
-                _model.inventoryWidthSize = value;
-                RaisePropertyChanged();
-            }
+            weaponDescriptor.attachedId = ID;
+            _model.itemClass = ItemClass.Weapon.ToString();
         }
 
         public string? WeaponClass
@@ -160,7 +70,7 @@ namespace QM_ItemCreatorTool.Model
             }
         }
 
-        
+
 
         public string? DefaultGrenadeID
         {
@@ -441,12 +351,15 @@ namespace QM_ItemCreatorTool.Model
             return weaponDescriptor;
         }
 
+
+
         private List<string> InstantiateIfEmpty(List<string>? List)
         {
             if (List == null || List.Count() <= 0) return new List<string>() { string.Empty };
             return List;
         }
         #endregion
+
 
         //public float visualReachCellDuration { get; set; }
 
