@@ -18,8 +18,8 @@
         MinWidth="500"
         Title="Item Creator Tool">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type ViewModels:WeaponTabViewModel}">
-            <Tabs:WeaponsTabView/>
+        <DataTemplate DataType="{x:Type ViewModels:RangedTabViewModel}">
+            <Tabs:RangedTabView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type ViewModels:MeleeTabViewModel}">
             <Tabs:MeleeTabView/>
@@ -32,6 +32,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type ViewModels:LocalizationTabViewModel}">
             <Tabs:LocalizationTabView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type ViewModels:AmmoTabViewModel}">
+            <Tabs:AmmoTabView/>
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -66,7 +69,10 @@
                 <ContentControl Content="{Binding Path=MeleeTabViewModel}"/>
             </TabItem>-->
             <TabItem Header="Ranged Weapons">
-                <ContentControl Content="{Binding Path=WeaponTabViewModel}"/>
+                <ContentControl Content="{Binding Path=RangedTabViewModel}"/>
+            </TabItem>
+            <TabItem Header="Ammo">
+                <ContentControl Content="{Binding Path=AmmoTabViewModel}"/>
             </TabItem>
             <TabItem Header="Receipts">
                 <ContentControl Content="{Binding Path=ItemReceiptTabViewModel}"/>

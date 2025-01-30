@@ -30,6 +30,9 @@
     <Compile Update="View\Tabs\ItemReceiptTabView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Tabs\AmmoTabView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

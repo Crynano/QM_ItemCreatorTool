@@ -1,14 +1,14 @@
-﻿using QM_ItemCreatorTool.Managers;
-using QM_ItemCreatorTool.Model;
-using QM_ItemCreatorTool.Commands;
-using System.Collections.ObjectModel;
+﻿using QM_ItemCreatorTool.Commands;
+using QM_ItemCreatorTool.Interfaces;
+using QM_ItemCreatorTool.Managers;
 using QM_WeaponImporter;
+using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
-    public class WeaponTabViewModel : TabViewModel<WeaponViewModel>
+    public class RangedTabViewModel : TabViewModel<RangedViewModel>
     {
-        public WeaponTabViewModel(DataProviderManager dataProvider)
+        public RangedTabViewModel(DataProviderManager dataProvider)
         {
             _dataProvider = dataProvider;
 
@@ -45,7 +45,7 @@ namespace QM_ItemCreatorTool.ViewModel
 
 
         #region Collections
-        public ObservableCollection<WeaponViewModel> WeaponList { get { return CurrentMod.Weapons; } }
+        public ObservableCollection<RangedViewModel> WeaponList { get { return CurrentMod.Weapons; } }
         public List<string> WeaponClassList { get; set; }
         public List<string> WeaponSubclassList { get; set; }
         public List<string> GripTypesList { get; set; }
@@ -70,15 +70,15 @@ namespace QM_ItemCreatorTool.ViewModel
         #region Commands Implementation
         protected override void Add(object? parameter)
         {
-            var newWeapon = new WeaponViewModel(new RangedWeaponTemplate());
-            CurrentMod.AddWeapon(newWeapon);
+            var newWeapon = new RangedViewModel(new RangedWeaponTemplate());
+            CurrentMod.AddItemToList(newWeapon);
             CurrentValue = newWeapon;
         }
         protected override void Remove(object? parameter)
         {
             if (CurrentValue == null) return;
             var indexOfWeapon = WeaponList.IndexOf(CurrentValue) - 1;
-            CurrentMod.RemoveWeapon(CurrentValue);
+            CurrentMod.RemoveItemFromList(CurrentValue);
             if (indexOfWeapon >= 0)
                 CurrentValue = WeaponList[indexOfWeapon];
             else
@@ -132,16 +132,15 @@ namespace QM_ItemCreatorTool.ViewModel
             return FolderExplorerManager.GetPathToFile(title, extension);
         }
 
-        // Faction
         private void AddFactionEntry(object? obj)
         {
             // Add faction Entry
-            CurrentValue?.AddFactionRule();
+            ((IFactionData)CurrentValue).AddFactionRule();
         }
         private void AddUncraftingEntry(object? obj)
         {
             // Add faction Entry
-            CurrentValue?.AddUncraftingEntry();
+            ((ICraftData)CurrentValue).AddCraftEntry();
         }
         #endregion
 

@@ -5,6 +5,8 @@ using QM_ItemCreatorTool.Model;
 using QM_ItemCreatorTool.ViewModel;
 using QM_WeaponImporter;
 using QM_WeaponImporter.Templates;
+using System;
+using System.Diagnostics.Metrics;
 using System.IO;
 
 namespace QM_ItemCreatorTool.Managers
@@ -40,10 +42,10 @@ namespace QM_ItemCreatorTool.Managers
             modifiedModData.Configuration = configFile;
             List<CustomItemContentDescriptor> localDescriptors = new List<CustomItemContentDescriptor>();
             // Load descriptors first of all!
-            string? descriptorsRelativePath = configFile.descriptorsPath;
-            if (!string.IsNullOrEmpty(descriptorsRelativePath))
+            string? folderRelativePath = configFile.descriptorsPath;
+            if (!string.IsNullOrEmpty(folderRelativePath))
             {
-                var descriptorsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), descriptorsRelativePath);
+                var descriptorsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), folderRelativePath);
                 var descriptorsFiles = Directory.GetFiles(descriptorsFolderPath);
                 string operationLog = string.Empty;
                 foreach (var descriptor in descriptorsFiles)
@@ -71,13 +73,13 @@ namespace QM_ItemCreatorTool.Managers
             }
 
             // First test! Success!
-            configFile.folderPaths.TryGetValue("rangedweapons", out string? rangedWeaponsRelativePath);
-            if (!string.IsNullOrEmpty(rangedWeaponsRelativePath))
+            configFile.folderPaths.TryGetValue("rangedweapons", out folderRelativePath);
+            if (!string.IsNullOrEmpty(folderRelativePath))
             {
                 // Get the data from the weapons
                 // Parse them and add them to our database
                 // Get the file name and filter
-                var weaponsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), rangedWeaponsRelativePath);
+                var weaponsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), folderRelativePath);
                 var weaponFiles = Directory.GetFiles(weaponsFolderPath);
                 string operationLog = string.Empty;
                 foreach (var weaponFile in weaponFiles)
@@ -98,49 +100,150 @@ namespace QM_ItemCreatorTool.Managers
                     }
                     // Transform into our viewmodel
                     // Then store
-                    WeaponViewModel viewModel = new WeaponViewModel(singleWeapon);
+                    RangedViewModel viewModel = new RangedViewModel(singleWeapon);
                     viewModel.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(viewModel.ID)));
-                    modifiedModData.AddWeapon(viewModel);
+                    modifiedModData.AddItemToList(viewModel);
                 }
                 if (operationLog != string.Empty)
                     _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
             }
 
-            configFile.folderPaths.TryGetValue("meleeweapons", out string? meleeWeaponsRelativePath);
-            if (!string.IsNullOrEmpty(meleeWeaponsRelativePath))
+            configFile.folderPaths.TryGetValue("meleeweapons", out folderRelativePath);
+            if (!string.IsNullOrEmpty(folderRelativePath))
             {
                 // Get the data from the weapons
                 // Parse them and add them to our database
                 // Get the file name and filter
-                var weaponsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), meleeWeaponsRelativePath);
-                var weaponFiles = Directory.GetFiles(weaponsFolderPath);
-                string operationLog = string.Empty;
-                foreach (var weaponFile in weaponFiles)
+                var weaponsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), folderRelativePath);
+                if (Directory.Exists(weaponsFolderPath))
                 {
-                    // Read the file first...
-                    string? fileContent = File.ReadAllText(weaponFile);
-                    if (string.IsNullOrEmpty(fileContent))
+                    var weaponFiles = Directory.GetFiles(weaponsFolderPath);
+                    string operationLog = string.Empty;
+                    foreach (var weaponFile in weaponFiles)
                     {
-                        operationLog += "Empty file? " + weaponFile + "\n";
-                        continue;
+                        // Read the file first...
+                        string? fileContent = File.ReadAllText(weaponFile);
+                        if (string.IsNullOrEmpty(fileContent))
+                        {
+                            operationLog += "Empty file? " + weaponFile + "\n";
+                            continue;
+                        }
+                        // Load as the model
+                        MeleeWeaponTemplate? singleWeapon = JsonConvert.DeserializeObject<MeleeWeaponTemplate>(fileContent);
+                        if (singleWeapon == null)
+                        {
+                            operationLog += "Could not be parsed. " + weaponFile + "\n";
+                            continue;
+                        }
+                        // Transform into our viewmodel
+                        // Then store
+                        var viewModel = new MeleeViewModel(singleWeapon);
+                        viewModel.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(viewModel.ID)));
+                        modifiedModData.AddItemToList(viewModel);
                     }
-                    // Load as the model
-                    MeleeWeaponTemplate? singleWeapon = JsonConvert.DeserializeObject<MeleeWeaponTemplate>(fileContent);
-                    if (singleWeapon == null)
-                    {
-                        operationLog += "Could not be parsed. " + weaponFile + "\n";
-                        continue;
-                    }
-                    // Transform into our viewmodel
-                    // Then store
-                    var viewModel = new MeleeViewModel(singleWeapon);
-                    viewModel.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(viewModel.ID)));
-                    modifiedModData.AddMelee(viewModel);
+                    if (operationLog != string.Empty)
+                        _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
                 }
-                if (operationLog != string.Empty)
-                    _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
             }
+
+            //configFile.folderPaths.TryGetValue("ammo", out folderRelativePath);
+            //if (!string.IsNullOrEmpty(folderRelativePath))
+            //{
+            //    // Get the data from the weapons
+            //    // Parse them and add them to our database
+            //    // Get the file name and filter
+            //    var weaponsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), folderRelativePath);
+            //    var weaponFiles = Directory.GetFiles(weaponsFolderPath);
+            //    string operationLog = string.Empty;
+            //    foreach (var weaponFile in weaponFiles)
+            //    {
+            //        // Read the file first...
+            //        string? fileContent = File.ReadAllText(weaponFile);
+            //        if (string.IsNullOrEmpty(fileContent))
+            //        {
+            //            operationLog += "Empty file? " + weaponFile + "\n";
+            //            continue;
+            //        }
+            //        // Load as the model
+            //        var template = JsonConvert.DeserializeObject<AmmoRecordTemplate>(fileContent);
+            //        if (template == null)
+            //        {
+            //            operationLog += "Could not be parsed. " + weaponFile + "\n";
+            //            continue;
+            //        }
+            //        // Transform into our viewmodel
+            //        // Then store
+            //        var viewModel = new AmmoViewModel(template);
+            //        viewModel.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(viewModel.ID)));
+            //        modifiedModData.AddItemToList(viewModel);
+            //    }
+            //    if (operationLog != string.Empty)
+            //        _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
+            //}
+
+            configFile.folderPaths.TryGetValue("itemreceipts", out folderRelativePath);
+            LoadGeneric<ItemProduceReceiptTemplate>(folderRelativePath, configPath, localDescriptors, ref modifiedModData);
+
+            configFile.folderPaths.TryGetValue("itemtransforms", out folderRelativePath);
+            LoadGeneric<ItemTransformationRecordTemplate>(folderRelativePath, configPath, localDescriptors, ref modifiedModData);
             return true;
+        }
+
+        private static void LoadGeneric<T>(string folderRelativePath, string configPath,
+            List<CustomItemContentDescriptor> localDescriptors, ref ModDataViewModel modifiedModData) where T : ConfigTableRecord
+        {
+            if (!string.IsNullOrEmpty(folderRelativePath))
+            {
+                // Get the data from the weapons
+                // Parse them and add them to our database
+                // Get the file name and filter
+                var folderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), folderRelativePath);
+                if (Directory.Exists(folderPath))
+                {
+                    var files = Directory.GetFiles(folderPath);
+                    string operationLog = string.Empty;
+                    foreach (var singleFile in files)
+                    {
+                        // Read the file first...
+                        string? fileContent = File.ReadAllText(singleFile);
+                        if (string.IsNullOrEmpty(fileContent))
+                        {
+                            operationLog += "Empty file? " + singleFile + "\n";
+                            continue;
+                        }
+                        // Load as the model
+                        T? template = JsonConvert.DeserializeObject<T>(fileContent);
+                        if (template == null)
+                        {
+                            operationLog += "Could not be parsed. " + singleFile + "\n";
+                            continue;
+                        }
+                        // Transform into our viewmodel
+                        // Then store
+                        object newItem = template;
+                        switch (template)
+                        {
+                            // Depending on type?
+                            case RangedWeaponTemplate ranged: newItem = new RangedViewModel(ranged); break;
+                            case MeleeWeaponTemplate melee: newItem = new MeleeViewModel(melee); break;
+                            case ItemProduceReceiptTemplate itemProduce: newItem = new ItemProduceViewModel(itemProduce); break;
+                            case AmmoRecordTemplate ammoEntry: newItem = new AmmoViewModel(ammoEntry); break;
+                        }
+                        if (newItem is ConfigTableViewModel<WeaponTemplate> weaponItem)
+                        {
+                            weaponItem.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(weaponItem.ID)));
+                        }
+                        modifiedModData.AddItemToList(newItem);
+                    }
+                    if (operationLog != string.Empty)
+                        _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
+                }
+                else
+                {
+                    _errorHandler.ThrowWarning("Weapon Loading Issue", $"Folder not found at {folderPath}");
+                    return;
+                }
+            }
         }
 
         private static string CreateModReport = string.Empty;
@@ -255,6 +358,7 @@ namespace QM_ItemCreatorTool.Managers
             //}
 
             // Later we add faction file
+            ExportCustomCategory(modifiedModData.Ammo.Select(x => x.GetModel), "ammo", "ammoData");
 
             if (!string.IsNullOrEmpty(CreateModReport))
                 _errorHandler.ThrowWarning("Errors occurred while creating mod", CreateModReport);
@@ -270,6 +374,22 @@ namespace QM_ItemCreatorTool.Managers
                 foreach (var item in exportList)
                 {
                     FileImporter.SaveAndSerialize(Path.Combine(BaseDirectory, folderPath, $"{item.Id}_{fileName}.json"), item);
+                }
+            }
+            catch (Exception ex)
+            {
+                _errorHandler.ThrowError("Error when exporting category", ex);
+            }
+        }
+
+        private static void ExportCustomCategory<T>(IEnumerable<T> exportList, string folderKey, string fileName) where T : ConfigTableRecordTemplate
+        {
+            try
+            {
+                FolderPaths.TryGetValue(folderKey, out string? folderPath);
+                foreach (var item in exportList)
+                {
+                    FileImporter.SaveAndSerialize(Path.Combine(BaseDirectory, folderPath, $"{item.id}_{fileName}.json"), item);
                 }
             }
             catch (Exception ex)

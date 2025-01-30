@@ -1,4 +1,5 @@
-﻿using QM_WeaponImporter;
+﻿using QM_ItemCreatorTool.ViewModel;
+using QM_WeaponImporter;
 using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.Model
@@ -14,26 +15,14 @@ namespace QM_ItemCreatorTool.Model
         }
 
         #region App Collections
-        //[JsonIgnore]
-        public ObservableCollection<WeaponViewModel> WeaponList = new ObservableCollection<WeaponViewModel>();
-        //[JsonIgnore]
+        public ObservableCollection<RangedViewModel> WeaponList = new ObservableCollection<RangedViewModel>();
         public ObservableCollection<MeleeViewModel> MeleeList = new ObservableCollection<MeleeViewModel>();
-        //[JsonIgnore]
         public ObservableCollection<ItemProduceViewModel> ItemReceipts = new ObservableCollection<ItemProduceViewModel>();
-        //[JsonIgnore]
         public ObservableCollection<LocalizationViewModel> LocalizationEntries = new ObservableCollection<LocalizationViewModel>();
+        public ObservableCollection<AmmoViewModel> AmmoList = new ObservableCollection<AmmoViewModel>();
         #endregion
 
         public ConfigTemplate config = new ConfigTemplate();
-
-        // When exporting, we populate this.
-        #region Exporting Lists
-        //public List<CustomItemContentDescriptor> descriptors = new List<CustomItemContentDescriptor>();
-        //public List<RangedWeaponTemplate> RangedWeaponList = new List<RangedWeaponTemplate>();
-        //public List<MeleeWeaponTemplate> MeleeWeaponList = new List<MeleeWeaponTemplate>();
-        //public List<ItemProduceReceiptTemplate> ItemReceiptsList = new List<ItemProduceReceiptTemplate>();
-        //public List<LocalizationViewModel> LocalizationList = new List<LocalizationViewModel>();
-        #endregion
 
         public void PrepareExport()
         {

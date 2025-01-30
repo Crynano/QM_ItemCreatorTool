@@ -26,16 +26,16 @@ public class LocalizationTabViewModel : TabViewModel<LocalizationViewModel>
         {
             var newLocEntry = new LocalizationViewModel();
             newLocEntry.LoadDefaults();
-            CurrentMod.AddLocalizationEntry(newLocEntry);
+            CurrentMod.AddItemToList(newLocEntry);
             CurrentValue = LocalizationEntries.LastOrDefault();
         }
     }
 
     protected override void Remove(object? obj)
     {
-        if (CurrentMod != null)
+        if (CurrentMod != null && CurrentValue != null)
         {
-            CurrentMod.RemoveLocalizationEntry(CurrentValue);
+            CurrentMod.RemoveItemFromList(CurrentValue);
             CurrentValue = LocalizationEntries.LastOrDefault();
         }
     }

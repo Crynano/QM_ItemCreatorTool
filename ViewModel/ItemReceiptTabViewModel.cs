@@ -40,7 +40,7 @@ public class ItemReceiptTabViewModel : TabViewModel<ItemProduceViewModel>
     protected override void Add(object? obj)
     {
         var newValue = new ItemProduceViewModel(new ItemProduceReceiptTemplate());
-        CurrentMod.AddRecipe(newValue);
+        CurrentMod.AddItemToList(newValue);
         CurrentValue = newValue;
     }
     protected override void Remove(object? parameter)
@@ -48,7 +48,7 @@ public class ItemReceiptTabViewModel : TabViewModel<ItemProduceViewModel>
         if (CurrentValue == null) return;
 
         var indexOfWeapon = ItemReceipts.IndexOf(CurrentValue) - 1;
-        CurrentMod.RemoveRecipe(CurrentValue);
+        CurrentMod.RemoveItemFromList(CurrentValue);
 
         if (indexOfWeapon >= 0)
             CurrentValue = ItemReceipts[indexOfWeapon];

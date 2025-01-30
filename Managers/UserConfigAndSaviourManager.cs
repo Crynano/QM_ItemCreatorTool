@@ -41,6 +41,7 @@ namespace QM_ItemCreatorTool.Managers
             try
             {
                 var deserializedMod = FileImporter.LoadAndDeserialize<ModDataModel>(LastMod);
+                if (deserializedMod == null) return false;
                 deserializedMod.LoadFromDeserialize();
 
                 if (deserializedMod == null) return false;

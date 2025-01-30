@@ -5,28 +5,31 @@ namespace QM_ItemCreatorTool.ViewModel
     public class MainViewModel : ViewModelBase
     {
         #region ViewModels
-        public WeaponTabViewModel WeaponTabViewModel { get; set; }
+        public RangedTabViewModel RangedTabViewModel { get; set; }
         public GeneralTabViewModel GeneralTabViewModel { get; set; }
         public MeleeTabViewModel MeleeTabViewModel { get; set; }
         public ItemReceiptTabViewModel ItemReceiptTabViewModel { get; set; }
         public LocalizationTabViewModel LocalizationTabViewModel { get; set; }
+        public AmmoTabViewModel AmmoTabViewModel { get; set; }
         #endregion
 
         private UserConfigAndSaviourManager userSaviour;
         public MainViewModel(
-            WeaponTabViewModel weaponViewModel,
+            RangedTabViewModel rangedViewModel,
             MeleeTabViewModel meleeTabViewModel,
             GeneralTabViewModel generalTabViewModel,
             ItemReceiptTabViewModel itemReceiptTabViewModel,
-            LocalizationTabViewModel localizationTabViewModel)
+            LocalizationTabViewModel localizationTabViewModel,
+            AmmoTabViewModel ammoTabViewModel)
         {
             userSaviour = new UserConfigAndSaviourManager();
 
-            WeaponTabViewModel = weaponViewModel;
+            RangedTabViewModel = rangedViewModel;
             GeneralTabViewModel = generalTabViewModel;
             MeleeTabViewModel = meleeTabViewModel;
             ItemReceiptTabViewModel = itemReceiptTabViewModel;
             LocalizationTabViewModel = localizationTabViewModel;
+            AmmoTabViewModel = ammoTabViewModel;
         }
 
         public override async Task LoadAsync()

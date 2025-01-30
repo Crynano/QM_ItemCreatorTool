@@ -12,10 +12,21 @@ public static class RequiredItemsToCustomItemList
             originalList.ToList().ForEach(item => result.Add(new CustomItemQuantity(item)));
         return result;
     }
-    public static List<ItemQuantity> FromCustomList(this ObservableCollection<CustomItemQuantity> originalList)
+    //public static List<ItemQuantity> FromCustomList(this ObservableCollection<CustomItemQuantity> originalList)
+    //{
+    //    var result = new List<ItemQuantity>();
+    //    originalList.ToList().ForEach(item => result.Add(new ItemQuantity(item.ItemId, item.Count)));
+    //    return result;
+    //}
+    public static List<ItemQuantity> FromCustomList(this List<CustomItemQuantity> originalList)
     {
         var result = new List<ItemQuantity>();
         originalList.ToList().ForEach(item => result.Add(new ItemQuantity(item.ItemId, item.Count)));
+        return result;
+    }
+    public static ItemQuantity ToItemQuantity(this CustomItemQuantity original)
+    {
+        var result = new ItemQuantity(original.ItemId, original.Count);
         return result;
     }
 }

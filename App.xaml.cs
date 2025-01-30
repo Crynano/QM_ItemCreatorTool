@@ -28,8 +28,9 @@ namespace QM_ItemCreatorTool
             service.AddSingleton<IMessageBoxHandler, ConfirmationManager>();
 
             service.AddTransient<GeneralTabViewModel>();
-            service.AddTransient<WeaponTabViewModel>();
+            service.AddTransient<RangedTabViewModel>();
             service.AddTransient<MeleeTabViewModel>();
+            service.AddTransient<AmmoTabViewModel>();
             service.AddTransient<ItemReceiptTabViewModel>();
             service.AddTransient<LocalizationTabViewModel>();
 
