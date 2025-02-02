@@ -5,7 +5,8 @@ using System.Runtime.CompilerServices;
 namespace QM_ItemCreatorTool.Properties;
 public class CustomStringDictionary : INotifyPropertyChanged
 {
-    public Localization.Lang Language { get; }
+    private Localization.Lang _language = Localization.Lang.EnglishUS;
+    public Localization.Lang Language { get => _language; set { _language = value; RaisePropertyChanged(); } }
 
     private string _name = string.Empty;
     public string Name

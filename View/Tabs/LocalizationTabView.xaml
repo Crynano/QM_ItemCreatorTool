@@ -67,7 +67,7 @@
                               AutoGenerateColumns="False" GridLinesVisibility="None"
                               CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Language" Binding="{Binding Language, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Language" Binding="{Binding Language}" IsReadOnly="True"/>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                             <DataGridTextColumn Header="Description" Binding="{Binding Description}"/>
                         </DataGrid.Columns>

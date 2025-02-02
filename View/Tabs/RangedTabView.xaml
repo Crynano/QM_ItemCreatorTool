@@ -90,7 +90,7 @@
                     <TextBox Text="{Binding CurrentValue.Weight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Image Path" DockPanel.Dock="Top"/>
+                    <TextBlock Text="Inventory Image Path" DockPanel.Dock="Top"/>
                     <DockPanel LastChildFill="True">
                         <Button DockPanel.Dock="Right"
                                 Content="Path"
@@ -109,7 +109,7 @@
                     </DockPanel>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Image Path" DockPanel.Dock="Top"/>
+                    <TextBlock Text="Ground Shadow Image Path" DockPanel.Dock="Top"/>
                     <DockPanel LastChildFill="True">
                         <Button DockPanel.Dock="Right"
                                 Content="Path"
