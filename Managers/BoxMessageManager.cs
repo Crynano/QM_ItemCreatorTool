@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace QM_ItemCreatorTool.Managers
 {
-    public class ConfirmationManager : IMessageBoxHandler
+    public class BoxMessageManager : IMessageBoxHandler
     {
         public void ThrowInfo(string title, string message)
         {

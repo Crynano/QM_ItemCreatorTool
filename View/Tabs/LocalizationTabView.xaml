@@ -55,6 +55,12 @@
                     <TextBox Text="{Binding CurrentValue.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Localization Table" DockPanel.Dock="Top"/>
+                    <ComboBox ItemsSource="{Binding TableType, Mode=OneWay}"
+                                SelectedItem="{Binding CurrentValue.TableKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <!--<TextBox Text="{Binding CurrentValue.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Localization Entries" DockPanel.Dock="Top"/>
                     <!--<Button Content="Create new" HorizontalAlignment="Stretch" Command="{Binding AddIngredient}" DockPanel.Dock="Bottom"></Button>-->
                     <DataGrid ItemsSource="{Binding CurrentValue.Entries, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 

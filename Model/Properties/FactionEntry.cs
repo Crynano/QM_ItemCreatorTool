@@ -10,7 +10,17 @@ namespace QM_ItemCreatorTool.Properties
         public float Points { get; set; } = 1;
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public List<ContentDropRecord>GetContentDrop(string itemID)
+        public FactionEntry() { }
+
+        public FactionEntry(string factionName, ContentDropRecord contentDropRecord)
+        {
+            this.Name = factionName;
+            this.TechLevel = contentDropRecord.TechLevel;
+            this.Weight = contentDropRecord.Weight;
+            this.Points = contentDropRecord.Points;
+        }
+
+        public List<ContentDropRecord> GetContentDrop(string itemID)
         {
             return new List<ContentDropRecord>()
             {

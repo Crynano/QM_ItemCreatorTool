@@ -5,17 +5,12 @@ using QM_ItemCreatorTool.Model;
 using QM_ItemCreatorTool.ViewModel;
 using QM_WeaponImporter;
 using QM_WeaponImporter.Templates;
-using System;
-using System.Diagnostics.Metrics;
 using System.IO;
 
 namespace QM_ItemCreatorTool.Managers
 {
-    // This library handles all data loading and storing.
-    // It should use the Lite API for creating and using stuff...but at your own discretion...
-    public static class ModDataManager
+    public static class ModDataExporter
     {
-        // Static and DI? still don't know how it works fine.
         private static IErrorHandler _errorHandler = new MessageBoxErrorHandler();
         public static bool LoadMod(string configPath, ref ModDataViewModel modifiedModData)
         {
@@ -72,7 +67,37 @@ namespace QM_ItemCreatorTool.Managers
                     _errorHandler.ThrowWarning("Descriptor Loading Issue", $"The following data could not be loaded:\n{operationLog}");
             }
 
-            // First test! Success!
+            foreach (var localizationEntry in configFile.localizationPaths)
+            {
+                if (!string.IsNullOrEmpty(folderRelativePath))
+                {
+                    var folderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), Path.Combine(localizationEntry.Value, localizationEntry.Key));
+                    if (Directory.Exists(folderPath))
+                    {
+                        var localizationFiles = Directory.GetFiles(folderPath);
+                        string operationLog = string.Empty;
+                        foreach (var file in localizationFiles)
+                        {
+                            string? fileContent = File.ReadAllText(file);
+                            if (string.IsNullOrEmpty(fileContent))
+                            {
+                                operationLog += "Empty file? " + file + "\n";
+                                continue;
+                            }
+                            LocalizationTemplate locFile = JsonConvert.DeserializeObject<LocalizationTemplate>(fileContent);
+                            if (locFile == null)
+                            {
+                                operationLog += "Could not be parsed. " + file + "\n";
+                                continue;
+                            }
+                            modifiedModData.SetLocalization(localizationEntry.Key, locFile);
+                        }
+                        if (operationLog != string.Empty)
+                            _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
+                    }
+                }
+            }
+
             configFile.folderPaths.TryGetValue("rangedweapons", out folderRelativePath);
             if (!string.IsNullOrEmpty(folderRelativePath))
             {
@@ -146,46 +171,77 @@ namespace QM_ItemCreatorTool.Managers
                 }
             }
 
-            //configFile.folderPaths.TryGetValue("ammo", out folderRelativePath);
-            //if (!string.IsNullOrEmpty(folderRelativePath))
-            //{
-            //    // Get the data from the weapons
-            //    // Parse them and add them to our database
-            //    // Get the file name and filter
-            //    var weaponsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), folderRelativePath);
-            //    var weaponFiles = Directory.GetFiles(weaponsFolderPath);
-            //    string operationLog = string.Empty;
-            //    foreach (var weaponFile in weaponFiles)
-            //    {
-            //        // Read the file first...
-            //        string? fileContent = File.ReadAllText(weaponFile);
-            //        if (string.IsNullOrEmpty(fileContent))
-            //        {
-            //            operationLog += "Empty file? " + weaponFile + "\n";
-            //            continue;
-            //        }
-            //        // Load as the model
-            //        var template = JsonConvert.DeserializeObject<AmmoRecordTemplate>(fileContent);
-            //        if (template == null)
-            //        {
-            //            operationLog += "Could not be parsed. " + weaponFile + "\n";
-            //            continue;
-            //        }
-            //        // Transform into our viewmodel
-            //        // Then store
-            //        var viewModel = new AmmoViewModel(template);
-            //        viewModel.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(viewModel.ID)));
-            //        modifiedModData.AddItemToList(viewModel);
-            //    }
-            //    if (operationLog != string.Empty)
-            //        _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
-            //}
+            configFile.folderPaths.TryGetValue("ammo", out folderRelativePath);
+            if (!string.IsNullOrEmpty(folderRelativePath))
+            {
+                var folderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), folderRelativePath);
+                if (Directory.Exists(folderPath))
+                {
+                    var weaponFiles = Directory.GetFiles(folderPath);
+                    string operationLog = string.Empty;
+                    foreach (var weaponFile in weaponFiles)
+                    {
+                        string? fileContent = File.ReadAllText(weaponFile);
+                        if (string.IsNullOrEmpty(fileContent))
+                        {
+                            operationLog += "Empty file? " + weaponFile + "\n";
+                            continue;
+                        }
+                        // Load as the model
+                        var template = JsonConvert.DeserializeObject<AmmoRecordTemplate>(fileContent);
+                        if (template == null)
+                        {
+                            operationLog += "Could not be parsed. " + weaponFile + "\n";
+                            continue;
+                        }
+                        // Transform into our viewmodel
+                        // Then store
+                        var viewModel = new AmmoViewModel(template);
+                        viewModel.SetDescriptor(localDescriptors.Find(x => x.attachedId.Equals(viewModel.ID)));
+                        modifiedModData.AddItemToList(viewModel);
+                    }
+                    if (operationLog != string.Empty)
+                        _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
+                }
+            }
+
+            configFile.folderPaths.TryGetValue("factionconfig", out folderRelativePath);
+            if (!string.IsNullOrEmpty(folderRelativePath))
+            {
+                var weaponsFolderPath = System.IO.Path.Combine(configPath.Replace(Path.GetFileName(configPath), string.Empty), folderRelativePath);
+                var weaponFiles = Directory.GetFiles(weaponsFolderPath);
+                string operationLog = string.Empty;
+                foreach (var weaponFile in weaponFiles)
+                {
+                    string? fileContent = File.ReadAllText(weaponFile);
+                    if (string.IsNullOrEmpty(fileContent))
+                    {
+                        operationLog += "Empty file? " + weaponFile + "\n";
+                        continue;
+                    }
+                    // Load as the model
+                    var template = JsonConvert.DeserializeObject<FactionTemplate>(fileContent);
+                    if (template == null)
+                    {
+                        operationLog += "Could not be parsed. " + weaponFile + "\n";
+                        continue;
+                    }
+                    // Transform into our viewmodel
+                    // Then store
+                    modifiedModData.SetFactionData(template);
+                }
+                if (operationLog != string.Empty)
+                    _errorHandler.ThrowWarning("Weapon Loading Issue", $"The following weapons could not be loaded:\n{operationLog}");
+            }
 
             configFile.folderPaths.TryGetValue("itemreceipts", out folderRelativePath);
             LoadGeneric<ItemProduceReceiptTemplate>(folderRelativePath, configPath, localDescriptors, ref modifiedModData);
 
             configFile.folderPaths.TryGetValue("itemtransforms", out folderRelativePath);
             LoadGeneric<ItemTransformationRecordTemplate>(folderRelativePath, configPath, localDescriptors, ref modifiedModData);
+
+            configFile.folderPaths.TryGetValue("datadisks", out folderRelativePath);
+            LoadGeneric<DatadiskRecordTemplate>(folderRelativePath, configPath, localDescriptors, ref modifiedModData);
             return true;
         }
 
@@ -298,22 +354,27 @@ namespace QM_ItemCreatorTool.Managers
                 FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, meleeWeaponsRelativePath, item.ID + ".json"), item.GetModel);
             }
 
-            modifiedModData.Configuration.localizationPaths.TryGetValue("item", out string? localizationFilePath);
-            LocalizationTemplate localizationFile = new LocalizationTemplate();
-            localizationFile.name = new Dictionary<string, Dictionary<string, string>>();
-            localizationFile.shortdesc = new Dictionary<string, Dictionary<string, string>>();
-            foreach (LocalizationViewModel item in modifiedModData.LocalizationEntries)
+            //modifiedModData.Configuration.localizationPaths.TryGetValue("item", out string? localizationFilePath);
+            //LocalizationTemplate localizationFile = new LocalizationTemplate();
+            //localizationFile.name = new Dictionary<string, Dictionary<string, string>>();
+            //localizationFile.shortdesc = new Dictionary<string, Dictionary<string, string>>();
+            //foreach (LocalizationViewModel item in modifiedModData.LocalizationEntries)
+            //{
+            //    var currentItemEntries = item.Entries.ToList();
+
+            //    var nameDictionary = currentItemEntries.Select(x => x.GetName()).ToDictionary();
+            //    var descDictionary = currentItemEntries.Select(x => x.GetDescription()).ToDictionary();
+
+            //    localizationFile.name.Add(item.ID, nameDictionary);
+            //    localizationFile.shortdesc.Add(item.ID, descDictionary);
+            //}
+            foreach (var entry in modifiedModData.Configuration.localizationPaths)
             {
-                var currentItemEntries = item.Entries.ToList();
-
-                var nameDictionary = currentItemEntries.Select(x => x.GetName()).ToDictionary();
-                var descDictionary = currentItemEntries.Select(x => x.GetDescription()).ToDictionary();
-
-                localizationFile.name.Add(item.ID, nameDictionary);
-                localizationFile.shortdesc.Add(item.ID, descDictionary);
+                var localizationFile = modifiedModData.GetLocalization(entry.Key);
+                if (localizationFile == null) continue;
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, entry.Value, $"{entry.Key}_localization.json"), localizationFile);
             }
             // Print the localization file
-            FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, localizationFilePath + "/item_localization.json"), localizationFile);
 
             string descriptorsRelativePath = modifiedModData.Configuration.descriptorsPath;
             // Before deserializing, change the paths to be relative ones and include the file name!
@@ -328,6 +389,8 @@ namespace QM_ItemCreatorTool.Managers
                 item.dryShotSoundPath = CopyFileToRelative(item.dryShotSoundPath, baseDirectory, "Assets/Sounds");
                 item.failedAttackSoundPath = CopyFileToRelative(item.failedAttackSoundPath, baseDirectory, "Assets/Sounds");
                 item.reloadSoundPath = CopyFileToRelative(item.reloadSoundPath, baseDirectory, "Assets/Sounds");
+                //Path and bundle
+                item.bundlePath = CopyFileToRelative(item.bundlePath, baseDirectory, "Assets/Bundles");
                 // Finalize
                 FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, descriptorsRelativePath, item.attachedId + "_descriptor.json"), item);
             }
@@ -344,28 +407,25 @@ namespace QM_ItemCreatorTool.Managers
 
             // This is for when destroying an object?
             ExportCategory(modifiedModData.GetItemTransforms(), "itemtransforms", "transformationData");
-            //modifiedModData.Configuration.folderPaths.TryGetValue("itemtransforms", out string? itemTransformPath);
-            //foreach (var item in modifiedModData.GetItemTransforms())
-            //{
-            //    FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, itemTransformPath, item.Id + "_transformationData.json"), item);
-            //}
-
             ExportCategory(modifiedModData.GetDataDisks(), "datadisks", "diskData");
-            //modifiedModData.Configuration.folderPaths.TryGetValue("datadisks", out string? dataDisksPath);
-            //foreach (var item in modifiedModData.GetDatatisks())
-            //{
-            //    FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, dataDisksPath, item.Id + "_transformationData.json"), item);
-            //}
-
-            // Later we add faction file
             ExportCustomCategory(modifiedModData.Ammo.Select(x => x.GetModel), "ammo", "ammoData");
+
+            modifiedModData.Configuration.folderPaths.TryGetValue("firemodes", out string? fireModesRelativePath);
+            foreach (var item in modifiedModData.FireModes.Select(x => x.GetModel))
+            {
+                // Icons
+                item.FireModeSpritePath = CopyFileToRelative(item.FireModeSpritePath, baseDirectory, "Assets/Images");
+
+                // Finalize
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, fireModesRelativePath, item.id + "_firemode.json"), item);
+            }
 
             if (!string.IsNullOrEmpty(CreateModReport))
                 _errorHandler.ThrowWarning("Errors occurred while creating mod", CreateModReport);
 
             return true;
         }
-
+        #region Export Functions
         private static void ExportCategory<T>(List<T> exportList, string folderKey, string fileName) where T : ConfigTableRecord
         {
             try
@@ -397,6 +457,7 @@ namespace QM_ItemCreatorTool.Managers
                 _errorHandler.ThrowError("Error when exporting category", ex);
             }
         }
+        #endregion
 
         private static string CopyFileToRelative(string objectPath, string baseDirectory, string relativeDestinationFolderPath)
         {

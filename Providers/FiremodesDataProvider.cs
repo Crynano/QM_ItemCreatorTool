@@ -1,14 +1,20 @@
-﻿using QM_ItemCreatorTool.Interfaces;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.Providers;
 
-internal class FiremodesDataProvider : IDataProvider<string>
+public class FiremodesDataProvider : BaseDataProvider<string>
 {
-    public IEnumerable<string> GetData()
+    public FiremodesDataProvider(ref ObservableCollection<string> baseList) : base(ref baseList)
+    {
+
+    }
+
+    public override IEnumerable<string> GetData()
     {
         // Just a list here, hardcoded?
         // Heh, yeah, it has always been.
-        return new List<string>()
+        var gameFireModes = new List<string>()
         {
             "advanced_energy_pistol_burst",
             "advanced_energy_pistol_single",
@@ -83,5 +89,12 @@ internal class FiremodesDataProvider : IDataProvider<string>
             "thunder_rifle_single",
             "toxicthrower_single"
         };
+
+        return gameFireModes;
+    }
+
+    public override IEnumerable GetSuggestions(string filter)
+    {
+        return managedList.Where(x => x.Contains(filter, StringComparison.CurrentCultureIgnoreCase));
     }
 }

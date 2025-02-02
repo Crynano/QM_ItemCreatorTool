@@ -21,16 +21,18 @@ namespace QM_ItemCreatorTool
 
         private void ConfigureService(ServiceCollection service)
         {
-            service.AddTransient<MainViewModel>();
-            service.AddTransient<MainWindow>();
 
             service.AddSingleton<IErrorHandler, MessageBoxErrorHandler>();
-            service.AddSingleton<IMessageBoxHandler, ConfirmationManager>();
+            service.AddSingleton<IMessageBoxHandler, BoxMessageManager>();
+
+            service.AddTransient<MainViewModel>();
+            service.AddTransient<MainWindow>();
 
             service.AddTransient<GeneralTabViewModel>();
             service.AddTransient<RangedTabViewModel>();
             service.AddTransient<MeleeTabViewModel>();
             service.AddTransient<AmmoTabViewModel>();
+            service.AddTransient<FireModeTabViewModel>();
             service.AddTransient<ItemReceiptTabViewModel>();
             service.AddTransient<LocalizationTabViewModel>();
 

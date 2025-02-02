@@ -15,7 +15,7 @@ public class ConfigTableViewModel<T> : ViewModelBase<T> where T : ConfigTableRec
 
     }
 
-    public string? ID
+    public string ID
     {
         get => _model.id;
         set

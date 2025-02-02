@@ -7,10 +7,10 @@ using System.Collections.ObjectModel;
 namespace QM_ItemCreatorTool.Model;
 public class ItemProduceViewModel : ViewModelBase<ItemProduceReceiptTemplate>
 {
-    public ItemProduceViewModel() : base() { }
-    public ItemProduceViewModel(ItemProduceReceiptTemplate model, string startingID = "default_id") : base(model)
+    public ItemProduceViewModel() : base() { OutputItemId = "default_id"; }
+    public ItemProduceViewModel(ItemProduceReceiptTemplate model) : base(model)
     {
-        OutputItemId = startingID;
+        OutputItemId = model.OutputItem;
     }
 
     public string OutputItemId

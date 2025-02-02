@@ -8,13 +8,14 @@ public class LocalizationTabViewModel : TabViewModel<LocalizationViewModel>
 {
     public LocalizationTabViewModel(DataProviderManager dataProvider)
     {
-        this._dataProvider = dataProvider;
+        this.DataProvider = dataProvider;
 
         AddCommand = new DelegateCommand(Add);
         RemoveCommand = new DelegateCommand(Remove);
     }
 
     #region Collections
+    public List<string> TableType { get => CurrentMod.Configuration.localizationPaths.Keys.ToList(); }
     public ObservableCollection<LocalizationViewModel> LocalizationEntries 
     { 
         get { return CurrentMod.LocalizationEntries; }

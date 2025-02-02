@@ -1,13 +1,15 @@
 ﻿using MGSC;
 using QM_ItemCreatorTool.Extensions;
+using QM_ItemCreatorTool.Interfaces;
 using QM_ItemCreatorTool.Model;
+using QM_ItemCreatorTool.Properties;
 using QM_WeaponImporter;
 using QM_WeaponImporter.Templates;
 using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
-    // this class is the connection between the model and the viewmodel
+    // this class is the connection between the model and the viewmodel 
     public class ModDataViewModel : ViewModelBase<ModDataModel>
     {
         public ModDataViewModel(ModDataModel model) : base(model)
@@ -40,6 +42,7 @@ namespace QM_ItemCreatorTool.ViewModel
             }
             return ItemReceipts.Select(x => x.GetModel).ToList();
         }
+
         public List<ItemTransformationRecord> GetItemTransforms()
         {
             List<ItemTransformationRecord> itemTransforms = new List<ItemTransformationRecord>();
@@ -53,6 +56,24 @@ namespace QM_ItemCreatorTool.ViewModel
             itemTransforms.AddRange(descriptors);
 
             return itemTransforms;
+        }
+
+        public void SetFactionData(FactionTemplate factionData)
+        {
+            foreach (var factionEntry in factionData.FactionRewardList)
+            {
+                foreach (var contentRecord in factionEntry.contentRecords)
+                {
+                    IFactionData itemList = Weapons.First(x => x.ID.Equals(contentRecord.ContentIds[0]));
+                    if (itemList != null) { itemList.AddFactionRule(new FactionEntry(factionEntry.FactionName, contentRecord)); continue; }
+
+                    itemList = Melee.First(x => x.ID.Equals(contentRecord.ContentIds[0]));
+                    if (itemList != null) { itemList.AddFactionRule(new FactionEntry(factionEntry.FactionName, contentRecord)); continue; }
+
+                    itemList = Ammo.First(x => x.ID.Equals(contentRecord.ContentIds[0]));
+                    if (itemList != null) { itemList.AddFactionRule(new FactionEntry(factionEntry.FactionName, contentRecord)); continue; }
+                }
+            }
         }
 
         public FactionTemplate GetFactionData()
@@ -109,9 +130,6 @@ namespace QM_ItemCreatorTool.ViewModel
             {
                 foreach (var chip in weapon.Chips)
                 {
-                    // Add every chip
-                    // Add weapon
-                    // if chip exists, do not add and add weapon
                     var currentChip = result.Find(x => x.Id.Equals(chip));
 
                     if (currentChip == null)
@@ -126,6 +144,47 @@ namespace QM_ItemCreatorTool.ViewModel
                 }
             }
             return result;
+        }
+
+        public void SetLocalization(string key, LocalizationTemplate file)
+        {
+            foreach (var idDataPair in file.name)
+            {
+                string ID = idDataPair.Key;
+                var nameEntries = idDataPair.Value;
+                file.shortdesc.TryGetValue(ID, out var descEntries);
+                LocalizationViewModel a = new LocalizationViewModel();
+                a.ID = ID;
+                a.TableKey = key;
+                foreach (var languageNameEntry in nameEntries)
+                {
+                    Enum.TryParse(typeof(Localization.Lang), languageNameEntry.Key, out var entryLanguage);
+                    if (entryLanguage == null) break;
+                    var descLanguagePair = descEntries.First(x => x.Key.Equals(languageNameEntry.Key));
+                    CustomStringDictionary e = new CustomStringDictionary(languageNameEntry.Value, descLanguagePair.Value, (Localization.Lang)entryLanguage);
+                    a.Entries.Add(e);
+                }
+                LocalizationEntries.Add(a);
+            }
+        }
+
+        public LocalizationTemplate GetLocalization(string key)
+        {
+            LocalizationTemplate localizationFile = new LocalizationTemplate();
+            localizationFile.name = new Dictionary<string, Dictionary<string, string>>();
+            localizationFile.shortdesc = new Dictionary<string, Dictionary<string, string>>();
+            var localizationEntries = LocalizationEntries.Where(x => x.TableKey.Equals(key, StringComparison.CurrentCulture));
+            foreach (LocalizationViewModel item in localizationEntries)
+            {
+                var currentItemEntries = item.Entries.ToList();
+
+                var nameDictionary = currentItemEntries.Select(x => x.GetName()).ToDictionary();
+                var descDictionary = currentItemEntries.Select(x => x.GetDescription()).ToDictionary();
+
+                localizationFile.name.Add(item.ID, nameDictionary);
+                localizationFile.shortdesc.Add(item.ID, descDictionary);
+            }
+            return localizationFile;
         }
         #endregion
 
@@ -155,6 +214,11 @@ namespace QM_ItemCreatorTool.ViewModel
             get => GetModel.AmmoList;
             set { GetModel.AmmoList = value; RaisePropertyChanged(); }
         }
+        public ObservableCollection<FireModeViewModel> FireModes
+        {
+            get => GetModel.FireModesList;
+            set { GetModel.FireModesList = value; RaisePropertyChanged(); }
+        }
 
         public void AddItemToList(object item)
         {
@@ -162,10 +226,30 @@ namespace QM_ItemCreatorTool.ViewModel
             {
                 case RangedViewModel ranged: Weapons.Add(ranged); break;
                 case MeleeViewModel melee: Melee.Add(melee); break;
-                case ItemProduceViewModel itemProduce: ItemReceipts.Add(itemProduce); break;
+                case ItemProduceViewModel itemProduce:
+                    {
+                        ItemReceipts.Add(itemProduce);
+                        break;
+                    }
                 case LocalizationViewModel locFile: LocalizationEntries.Add(locFile); break;
                 case AmmoViewModel ammoEntry: Ammo.Add(ammoEntry); break;
-                case ItemTransformationRecord record: Weapons.ToList().Find(x => x.ID.Equals(record.Id))?.SetItemTransformationRecord(record); break;
+                case ItemTransformationRecordTemplate record:
+                    {
+                        if (!string.IsNullOrEmpty(record.Id))
+                        {
+                            BindCraftToItem(record);
+                        }
+                        break;
+                    }
+                case FireModeViewModel fmViewModel: FireModes.Add(fmViewModel); break;
+                case DatadiskRecordTemplate dataDisk:
+                    {
+                        if (!string.IsNullOrEmpty(dataDisk.Id))
+                        {
+                            BindDatadiskToItem(dataDisk);
+                        }
+                        break;
+                    }
                 default: break;
             }
         }
@@ -179,8 +263,33 @@ namespace QM_ItemCreatorTool.ViewModel
                 case ItemProduceViewModel itemProduce: ItemReceipts.Remove(itemProduce); break;
                 case LocalizationViewModel locFile: LocalizationEntries.Remove(locFile); break;
                 case AmmoViewModel ammoEntry: Ammo.Remove(ammoEntry); break;
+                case FireModeViewModel fmViewModel: FireModes.Remove(fmViewModel); break;
                 default: break;
             }
+        }
+
+        private void BindCraftToItem(ItemTransformationRecordTemplate itemReceipt)
+        {
+            var weapon = Weapons.First(x => x.ID.Equals(itemReceipt.Id));
+            if (weapon != null) { weapon.SetItemTransformationRecord(itemReceipt); return; }
+
+            var melee = Melee.First(x => x.ID.Equals(itemReceipt.Id));
+            if (melee != null) { melee.SetItemTransformationRecord(itemReceipt); return; }
+
+            var ammo = Ammo.First(x => x.ID.Equals(itemReceipt.Id));
+            if (ammo != null) { ammo.SetItemTransformationRecord(itemReceipt); return; }
+        }
+
+        private void BindDatadiskToItem(DatadiskRecordTemplate dataDisk)
+        {
+            IChipData item = Weapons.First(x => dataDisk.UnlockIds.Contains(x.ID));
+            if (item != null) { item.Chips.Add(dataDisk.Id); return; }
+
+            item = Melee.First(x => dataDisk.UnlockIds.Contains(x.ID));
+            if (item != null) { item.Chips.Add(dataDisk.Id); return; }
+
+            item = Ammo.First(x => dataDisk.UnlockIds.Contains(x.ID));
+            if (item != null) { item.Chips.Add(dataDisk.Id); return; }
         }
 
         #endregion
@@ -194,6 +303,7 @@ namespace QM_ItemCreatorTool.ViewModel
             replacement.ItemReceipts.ToList().ForEach(this.ItemReceipts.Add);
             replacement.LocalizationEntries.ToList().ForEach(this.LocalizationEntries.Add);
             replacement.Ammo.ToList().ForEach(this.Ammo.Add);
+            replacement.FireModes.ToList().ForEach(this.FireModes.Add);
         }
 
         public void ClearMod()
@@ -203,6 +313,7 @@ namespace QM_ItemCreatorTool.ViewModel
             this.ItemReceipts.Clear();
             this.LocalizationEntries.Clear();
             this.Ammo.Clear();
+            this.FireModes.Clear();
         }
         #endregion
     }

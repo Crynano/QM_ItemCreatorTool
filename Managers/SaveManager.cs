@@ -5,14 +5,14 @@ using System.IO;
 
 namespace QM_ItemCreatorTool.Managers
 {
-    public class UserConfigAndSaviourManager
+    public class SaveManager
     {
         private string AppFolder => Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "QM_ItemCreatorTool");
 
         private string LastMod => Path.Combine(AppFolder, "lastMod.json");
         private IErrorHandler _errorHandler = new MessageBoxErrorHandler();
 
-        public UserConfigAndSaviourManager()
+        public SaveManager()
         {
 
         }
@@ -20,8 +20,8 @@ namespace QM_ItemCreatorTool.Managers
         public void Initialize()
         {
             CreateDefaultFolder();
-            App.Current.MainWindow.Closed += Save;
-            Load();
+            App.Current.MainWindow.Closed += SaveOnExit;
+            LoadLastData();
         }
 
         private void CreateDefaultFolder()
@@ -30,17 +30,18 @@ namespace QM_ItemCreatorTool.Managers
                 Directory.CreateDirectory(AppFolder);
         }
 
-        public void Load()
+        #region Load
+        private void LoadLastData()
         {
-            LoadLastData();
+            Load(LastMod);
         }
 
-        private bool LoadLastData()
+        public bool Load(string path)
         {
-            if (!File.Exists(LastMod)) return false;
+            if (!File.Exists(path)) return false;
             try
             {
-                var deserializedMod = FileImporter.LoadAndDeserialize<ModDataModel>(LastMod);
+                var deserializedMod = FileImporter.LoadAndDeserialize<ModDataModel>(path);
                 if (deserializedMod == null) return false;
                 deserializedMod.LoadFromDeserialize();
 
@@ -55,12 +56,20 @@ namespace QM_ItemCreatorTool.Managers
                 return false;
             }
         }
+        #endregion
 
-        public void Save(object? sender, EventArgs e)
+        #region Save
+        private void SaveOnExit(object? sender, EventArgs e)
+        {
+            Save(LastMod);
+        }
+
+        public void Save(string path)
         {
             var data = ModInstanceManager.CurrentMod.GetModel;
             data.PrepareExport();
-            FileImporter.SaveAndSerialize(LastMod, data);
+            FileImporter.SaveAndSerialize(path, data);
         }
+        #endregion
     }
 }

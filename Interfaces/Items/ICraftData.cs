@@ -13,4 +13,5 @@ public interface ICraftData
     }
 
     public ItemTransformationRecord GetItemTransformationRecord();
+    public void SetItemTransformationRecord(ItemTransformationRecord itemTransformationRecord);
 }

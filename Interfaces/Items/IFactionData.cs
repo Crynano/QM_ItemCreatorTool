@@ -11,6 +11,20 @@ public interface IFactionData
         if (FactionRules == null) return;
         FactionRules.Add(new FactionEntry());
     }
+    public virtual void AddFactionRule(FactionEntry factionEntry)
+    {
+        if (FactionRules == null) return;
+        FactionRules.Add(factionEntry);
+    }
+    public virtual void SetFactionRules(IEnumerable<FactionEntry> factionEntries)
+    {
+        if (FactionRules == null) return;
+        FactionRules.Clear();
+        foreach (var faction in factionEntries)
+        {
+            FactionRules.Add(faction);
+        }
+    }
 
     public virtual void RemoveFactionRule(FactionEntry entry)
     {

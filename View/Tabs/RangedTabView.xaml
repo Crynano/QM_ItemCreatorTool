@@ -8,12 +8,15 @@
              xmlns:converters="clr-namespace:QM_ItemCreatorTool.Converters"
              xmlns:properties="clr-namespace:QM_ItemCreatorTool.Properties"
              xmlns:MGSC="clr-namespace:MGSC;assembly=Assembly-CSharp"
+             xmlns:autocomplete="http://wpfcontrols.com/"
              xmlns:sdl="http://schemas.sdl.com/xaml"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
-             d:DesignHeight="2000" d:DesignWidth="800">
+             d:DesignHeight="2500" d:DesignWidth="800">
     <Grid Background="White">
         <Grid.Resources>
             <converters:StringToFloatConverter x:Key="StringToFloat"/>
+            <converters:ConfigTableToStringConverter x:Key="ItemToString"/>
             <ObjectDataProvider x:Key="WeaponClassEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="MGSC:WeaponClass"/>
@@ -157,10 +160,6 @@
                     </DataGrid>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Repair Category" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding CurrentValue.RepairCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Chips" DockPanel.Dock="Top"></TextBlock>
                     <sdl:MultiSelectComboBox
                             ItemsSource="{Binding ChipList, UpdateSourceTrigger=PropertyChanged}"
@@ -224,15 +223,49 @@
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Firemodes" DockPanel.Dock="Top"/>
-                    <!--<controls:MultiSelectCombobox ItemSource="{Binding FireModesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                  SelectedItems="{Binding CurrentValue.Firemodes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  ItemSeparator=","
-                                                  LookUpContract="{Binding FireModeLookupContract}"/>-->
-                    <sdl:MultiSelectComboBox
-                        ItemsSource="{Binding FireModesList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedItems="{Binding CurrentValue.Firemodes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        SelectionMode="Multiple">
-                    </sdl:MultiSelectComboBox>
+                    <StackPanel>
+                        <autocomplete:AutoCompleteTextBox Margin="0,0,0,5" Height="25"
+                            Provider="{Binding FireModeProvider}"
+                            Text="{Binding TypedFireMode, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItem="{Binding CurrentValue.FireModeOne, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Watermark="Enter a firemode id">
+                            <autocomplete:AutoCompleteTextBox.LoadingContent>
+                                <TextBlock Margin="5" FontSize="14" Text="Loading..." />
+                            </autocomplete:AutoCompleteTextBox.LoadingContent>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding AddFireModeOne}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </autocomplete:AutoCompleteTextBox>
+                        <autocomplete:AutoCompleteTextBox Height="25"
+                            Provider="{Binding FireModeProvider}"
+                            Text="{Binding TypedFireMode, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItem="{Binding CurrentValue.FireModeTwo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Watermark="Enter a firemode id">
+                            <autocomplete:AutoCompleteTextBox.LoadingContent>
+                                <TextBlock Margin="5" FontSize="14" Text="Loading..." />
+                            </autocomplete:AutoCompleteTextBox.LoadingContent>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding AddFireModeTwo}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </autocomplete:AutoCompleteTextBox>
+                    </StackPanel>
+                    <!--<sdl:MultiSelectComboBox 
+                        ItemsSource="{Binding FireModesList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItems="{Binding CurrentValue.Firemodes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ItemToString}}"
+                        SelectionMode="Multiple"
+                        DropdownItemTemplate="{StaticResource CustomComboBox.ItemDropdown}"
+                        SelectedItemTemplate="{StaticResource CustomComboBox.ItemTemplate}"
+                        EnableAutoComplete="False">
+                        
+                    </sdl:MultiSelectComboBox>-->
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Bonus Accuracy" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.BonusAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Range" DockPanel.Dock="Top"/>
@@ -277,6 +310,10 @@
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Durability" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding CurrentValue.Durability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Repair Category" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.RepairCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Damage Over Time Wound Damage Bonus" DockPanel.Dock="Top"/>
@@ -337,6 +374,21 @@
                             Content="Path"
                             Command="{Binding GetReloadSoundPathCommand}"/>
                     <TextBox Text="{Binding CurrentValue.ReloadSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Unity AssetBundle Path" DockPanel.Dock="Top"/>
+                    <Button DockPanel.Dock="Right"            Content="Path"            Command="{Binding GetBundlePath}"/>
+                    <TextBox Text="{Binding CurrentValue.BundlePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="In-bundle Prefab name/path" DockPanel.Dock="Top"/>
+                    <!--<Button DockPanel.Dock="Right"            Content="Path"            Command="{Binding GetPrefabPath}"/>-->
+                    <TextBox Text="{Binding CurrentValue.PrefabName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="In-bundle Texture name/path" DockPanel.Dock="Top"/>
+                    <!--<Button DockPanel.Dock="Right"            Content="Path"            Command="{Binding GetTexturePath}"/>-->
+                    <TextBox Text="{Binding CurrentValue.TextureName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
             </DockPanel>
         </ScrollViewer>

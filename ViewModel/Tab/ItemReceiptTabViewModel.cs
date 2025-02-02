@@ -10,7 +10,7 @@ public class ItemReceiptTabViewModel : TabViewModel<ItemProduceViewModel>
 {
     public ItemReceiptTabViewModel(DataProviderManager dataProvider)
     {
-        this._dataProvider = dataProvider;
+        this.DataProvider = dataProvider;
 
         AddIngredient = new DelegateCommand(CreateNewEntry);
         AddItemGrade = new DelegateCommand(AddGradeEntry);

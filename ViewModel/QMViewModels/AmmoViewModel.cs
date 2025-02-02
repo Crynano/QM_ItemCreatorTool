@@ -162,6 +162,14 @@ public class AmmoViewModel : ItemViewModel<AmmoRecordTemplate>, IFactionData, IC
             OutputItems = DisassemblyList.Select(x => x.GetOriginal()).ToList()
         };
     }
+    public void SetItemTransformationRecord(ItemTransformationRecord record)
+    {
+        DisassemblyList.Clear();
+        foreach (var item in record.OutputItems)
+        {
+            DisassemblyList.Add(new CustomItemQuantity(item));
+        }
+    }
     #endregion
 
     #region Chips

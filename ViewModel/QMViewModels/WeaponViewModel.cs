@@ -1,14 +1,16 @@
 ﻿using MGSC;
+using Newtonsoft.Json;
 using QM_ItemCreatorTool.Interfaces;
 using QM_ItemCreatorTool.Properties;
 using QM_WeaponImporter;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
     public class WeaponViewModel<T> : BreakableItemViewModel<T>, IFactionData, ICraftData, IChipData where T : WeaponTemplate, new()
     {
-        public WeaponViewModel() { }
+        public WeaponViewModel() { _model.useCustomBullet = false; }
         public WeaponViewModel(T item) : base(item) { }
 
         #region Properties
@@ -126,6 +128,38 @@ namespace QM_ItemCreatorTool.ViewModel
             }
         }
 
+        [JsonIgnore]
+        public string FireModeOne
+        {
+            get
+            {
+                if (Firemodes.Count > 0) return Firemodes[0];
+                else return string.Empty;
+            }
+            set
+            {
+                if (Firemodes.Count < 1) Firemodes.Add(value);
+                else Firemodes[0] = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        [JsonIgnore]
+        public string FireModeTwo
+        {
+            get 
+            { 
+                if (Firemodes.Count > 1) return Firemodes[1];
+                else return string.Empty;
+            }
+            set
+            {
+                if (Firemodes.Count < 2) Firemodes.Add(value);
+                else Firemodes[1] = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public float BonusAccuracy
         {
             get => _model.bonusAccuracy;
@@ -231,6 +265,21 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             get => itemDescriptor.reloadSoundPath;
             set { itemDescriptor.reloadSoundPath = value; RaisePropertyChanged(); }
+        }
+        public string? BundlePath
+        {
+            get => itemDescriptor.bundlePath;
+            set { itemDescriptor.bundlePath = value; RaisePropertyChanged(); }
+        }
+        public string? PrefabName
+        {
+            get => itemDescriptor.prefabName;
+            set { itemDescriptor.prefabName = value; RaisePropertyChanged(); }
+        }
+        public string? TextureName
+        {
+            get => itemDescriptor.textureName;
+            set { itemDescriptor.textureName = value; RaisePropertyChanged(); }
         }
         #endregion
 

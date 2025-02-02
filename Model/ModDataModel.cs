@@ -14,12 +14,13 @@ namespace QM_ItemCreatorTool.Model
 
         }
 
-        #region App Collections
+        #region Lists
         public ObservableCollection<RangedViewModel> WeaponList = new ObservableCollection<RangedViewModel>();
         public ObservableCollection<MeleeViewModel> MeleeList = new ObservableCollection<MeleeViewModel>();
         public ObservableCollection<ItemProduceViewModel> ItemReceipts = new ObservableCollection<ItemProduceViewModel>();
         public ObservableCollection<LocalizationViewModel> LocalizationEntries = new ObservableCollection<LocalizationViewModel>();
         public ObservableCollection<AmmoViewModel> AmmoList = new ObservableCollection<AmmoViewModel>();
+        public ObservableCollection<FireModeViewModel> FireModesList = new ObservableCollection<FireModeViewModel>();
         #endregion
 
         public ConfigTemplate config = new ConfigTemplate();

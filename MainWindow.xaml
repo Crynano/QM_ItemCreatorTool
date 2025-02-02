@@ -36,6 +36,9 @@
         <DataTemplate DataType="{x:Type ViewModels:AmmoTabViewModel}">
             <Tabs:AmmoTabView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type ViewModels:FireModeTabViewModel}">
+            <Tabs:FireModeTabView/>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -44,11 +47,12 @@
         </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="_File">
-                <MenuItem Header="Save"/>
-                <Separator/>
+                <MenuItem Header="_Save project" Command="{Binding SaveProjectCommand}"/>
+                <MenuItem Header="_Load project" Command="{Binding LoadProjectCommand}"/>
+                <!--<Separator/>
                 <MenuItem Header="_Settings"/>
                 <Separator/>
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="_Exit" Command=""/>-->
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Command="Cut" />
@@ -56,9 +60,9 @@
                 <MenuItem Command="Paste" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_GitHub"/>
+                <MenuItem Header="_GitHub" Command="{Binding OpenGithubCommand}"/>
                 <Separator/>
-                <MenuItem Header="_Credits"/>
+                <MenuItem Header="_Credits" Command="{Binding OpenCreditsCommand}"/>
             </MenuItem>
         </Menu>
         <TabControl Grid.Row="1" Margin="2">
@@ -73,6 +77,9 @@
             </TabItem>
             <TabItem Header="Ammo">
                 <ContentControl Content="{Binding Path=AmmoTabViewModel}"/>
+            </TabItem>
+            <TabItem Header="Firemodes">
+                <ContentControl Content="{Binding Path=FireModeTabViewModel}"/>
             </TabItem>
             <TabItem Header="Receipts">
                 <ContentControl Content="{Binding Path=ItemReceiptTabViewModel}"/>

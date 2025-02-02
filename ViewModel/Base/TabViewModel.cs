@@ -4,7 +4,7 @@ using QM_ItemCreatorTool.Managers;
 namespace QM_ItemCreatorTool.ViewModel;
 public abstract class TabViewModel<T> : ViewModelBase where T : class
 {
-    protected DataProviderManager _dataProvider;
+    protected DataProviderManager DataProvider { get; set; }
 
     #region Properties
     protected T? _currentValue;

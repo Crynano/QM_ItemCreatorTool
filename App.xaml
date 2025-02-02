@@ -4,6 +4,12 @@
              xmlns:local="clr-namespace:QM_ItemCreatorTool"
              Exit="Application_Exit">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/ColorPalette.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/DropdownStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Templates/DropdownTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

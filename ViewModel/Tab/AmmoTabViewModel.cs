@@ -1,26 +1,20 @@
 ﻿using QM_ItemCreatorTool.Commands;
 using QM_ItemCreatorTool.Interfaces;
 using QM_ItemCreatorTool.Managers;
-using QM_WeaponImporter;
 using System.Collections.ObjectModel;
 
 namespace QM_ItemCreatorTool.ViewModel
 {
-    public class RangedTabViewModel : TabViewModel<RangedViewModel>
+    public class AmmoTabViewModel : TabViewModel<AmmoViewModel>
     {
-        public RangedTabViewModel(DataProviderManager dataProvider)
+        public AmmoTabViewModel(DataProviderManager dataProvider)
         {
-            _dataProvider = dataProvider;
+            DataProvider = dataProvider;
 
-            WeaponClassList = _dataProvider.WeaponClasses;
-            WeaponSubclassList = _dataProvider.WeaponSubclasses;
-            GripTypesList = _dataProvider.GripTypes;
-            FactionList = _dataProvider.Factions;
 
-            _dataProvider.FireModes.ForEach(FireModesList.Add);
-            _dataProvider.Categories.ForEach(Tags.Add);
-            _dataProvider.Grenades.ForEach(GrenadesList.Add);
-            _dataProvider.Chips.ForEach(ChipList.Add);
+            FactionList = DataProvider.Factions;
+            DataProvider.Categories.ForEach(Tags.Add);
+            DataProvider.Chips.ForEach(ChipList.Add);
 
             // Commands
             AddCommand = new DelegateCommand(Add, CanExecuteCommand);
@@ -31,12 +25,6 @@ namespace QM_ItemCreatorTool.ViewModel
             SmallSpritePathCommand = new DelegateCommand(GetPathForSmallImage);
             ShadowSpritePathCommand = new DelegateCommand(GetPathForShadowImage);
 
-            // Sounds
-            GetAttackSoundPathCommand = new DelegateCommand(GetPathForAttackSound);
-            GetReloadSoundPathCommand = new DelegateCommand(GetPathForReloadSound);
-            GetDrySoundPathCommand = new DelegateCommand(GetPathForDrySound);
-            GetFailedSoundPathCommand = new DelegateCommand(GetPathForFailedSound);
-
             // Faction
             AddFactionEntryCommand = new DelegateCommand(AddFactionEntry);
             // Uncrafting
@@ -45,14 +33,9 @@ namespace QM_ItemCreatorTool.ViewModel
 
 
         #region Collections
-        public ObservableCollection<RangedViewModel> WeaponList { get { return CurrentMod.Weapons; } }
-        public List<string> WeaponClassList { get; set; }
-        public List<string> WeaponSubclassList { get; set; }
-        public List<string> GripTypesList { get; set; }
+        public ObservableCollection<AmmoViewModel> AmmoList { get { return CurrentMod.Ammo; } }
         public List<string> FactionList { get; set; }
-        public ObservableCollection<string> FireModesList { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> Tags { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<string> GrenadesList { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> ChipList { get; set; } = new ObservableCollection<string>();
         #endregion
 
@@ -62,27 +45,24 @@ namespace QM_ItemCreatorTool.ViewModel
         public DelegateCommand SpritePathCommand { get; }
         public DelegateCommand SmallSpritePathCommand { get; }
         public DelegateCommand ShadowSpritePathCommand { get; }
-        public DelegateCommand GetAttackSoundPathCommand { get; }
-        public DelegateCommand GetReloadSoundPathCommand { get; }
-        public DelegateCommand GetDrySoundPathCommand { get; }
-        public DelegateCommand GetFailedSoundPathCommand { get; }
 
         #region Commands Implementation
         protected override void Add(object? parameter)
         {
-            var newWeapon = new RangedViewModel(new RangedWeaponTemplate());
-            CurrentMod.AddItemToList(newWeapon);
-            CurrentValue = newWeapon;
+            var ammoItem = new AmmoViewModel();
+            CurrentMod.AddItemToList(ammoItem);
+            CurrentValue = ammoItem;
         }
+
         protected override void Remove(object? parameter)
         {
             if (CurrentValue == null) return;
-            var indexOfWeapon = WeaponList.IndexOf(CurrentValue) - 1;
+            var indexOfWeapon = AmmoList.IndexOf(CurrentValue) - 1;
             CurrentMod.RemoveItemFromList(CurrentValue);
             if (indexOfWeapon >= 0)
-                CurrentValue = WeaponList[indexOfWeapon];
+                CurrentValue = AmmoList[indexOfWeapon];
             else
-                CurrentValue = WeaponList.FirstOrDefault();
+                CurrentValue = AmmoList.FirstOrDefault();
         }
 
         private bool CanExecuteCommand(object? obj) => ModInstanceManager.CurrentMod != null;
@@ -103,27 +83,6 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             var path = GetPath("Select an image", "Image files (*.jpg, *.png)|*.png;*.jpg|All files (*.*)|*.*");
             if (path != null && CurrentValue != null) CurrentValue.ShadowSpritePath = path;
-        }
-
-        private void GetPathForReloadSound(object? obj)
-        {
-            var path = GetPath("Select a sound file", "Sound files (*.wav)|*.wav");
-            if (path != null && CurrentValue != null) CurrentValue.ReloadSoundPath = path;
-        }
-        private void GetPathForAttackSound(object? obj)
-        {
-            var path = GetPath("Select a sound file", "Sound files (*.wav)|*.wav");
-            if (path != null && CurrentValue != null) CurrentValue.AttackSoundPath = path;
-        }
-        private void GetPathForFailedSound(object? obj)
-        {
-            var path = GetPath("Select a sound file", "Sound files (*.wav)|*.wav");
-            if (path != null && CurrentValue != null) CurrentValue.FailedAttackSoundPath = path;
-        }
-        private void GetPathForDrySound(object? obj)
-        {
-            var path = GetPath("Select a sound file", "Sound files (*.wav)|*.wav");
-            if (path != null && CurrentValue != null) CurrentValue.DryShotSoundPath = path;
         }
 
         // For the path searching

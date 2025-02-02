@@ -20,8 +20,16 @@ public class CustomStringDictionary : INotifyPropertyChanged
         set { _description = value; RaisePropertyChanged(); }
     }
 
+    public CustomStringDictionary() { }
+
     public CustomStringDictionary(Localization.Lang language)
     {
+        Language = language;
+    }
+    public CustomStringDictionary(string name, string desc, Localization.Lang language)
+    {
+        this.Name = name;
+        this.Description = desc;
         Language = language;
     }
 

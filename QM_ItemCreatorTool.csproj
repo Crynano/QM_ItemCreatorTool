@@ -21,6 +21,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Update="View\Tabs\FireModeTabView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Tabs\LocalizationTabView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -53,12 +56,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AutoCompleteTextBox" Version="1.7.2" />
 		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Sdl.MultiSelectComboBox" Version="1.0.103" />
 	</ItemGroup>

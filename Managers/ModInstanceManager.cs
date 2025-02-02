@@ -6,7 +6,7 @@ namespace QM_ItemCreatorTool.Managers
 {
     public static class ModInstanceManager
     {
-        private static IMessageBoxHandler _adviceHandler = new ConfirmationManager();
+        private static IMessageBoxHandler _adviceHandler = new BoxMessageManager();
         private static IErrorHandler _errorHandler = new MessageBoxErrorHandler();
 
         public static ModDataViewModel CurrentMod { get; set; } = new ModDataViewModel(new ModDataModel());
@@ -16,7 +16,7 @@ namespace QM_ItemCreatorTool.Managers
             ModDataViewModel modDataViewModel = new ModDataViewModel(new ModDataModel());
             try
             {
-                bool loadResult = ModDataManager.LoadMod(configFilePath, ref modDataViewModel);
+                bool loadResult = ModDataExporter.LoadMod(configFilePath, ref modDataViewModel);
                 if (loadResult)
                 {
                     // Then store it.
@@ -37,7 +37,7 @@ namespace QM_ItemCreatorTool.Managers
         {
             // Create Mod using currentMod
             // Create data structure.
-            bool loadResult = ModDataManager.CreateMod(configFilePath, CurrentMod);
+            bool loadResult = ModDataExporter.CreateMod(configFilePath, CurrentMod);
             if (loadResult) { _adviceHandler.ThrowInfo("Success!", $"Successfully created mod at: {configFilePath}"); }
         }
 

@@ -28,5 +28,6 @@ public class LocalizationViewModel : ViewModelBase
         set { _id = value; RaisePropertyChanged(); }
     }
 
+    public string TableKey { get; set; } = string.Empty;
     public ObservableCollection<CustomStringDictionary> Entries { get; set; } = new ObservableCollection<CustomStringDictionary>();
 }
