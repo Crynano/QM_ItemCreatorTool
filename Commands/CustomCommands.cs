@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Spellweaver.Commands
+namespace QM_ItemCreatorTool.Commands
 {
     public class CustomCommands
     {

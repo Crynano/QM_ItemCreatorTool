@@ -10,6 +10,9 @@ namespace QM_ItemCreatorTool
         public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
+            // Commas in textboxes
+            System.Windows.FrameworkCompatibilityPreferences.KeepTextBoxDisplaySynchronizedWithTextProperty = false;
+
             _viewModel = viewModel;
             DataContext = _viewModel;
             Loaded += MainWindow_Loaded;

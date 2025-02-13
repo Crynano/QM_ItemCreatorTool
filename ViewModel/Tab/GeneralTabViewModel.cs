@@ -1,24 +1,23 @@
 ﻿using QM_ItemCreatorTool.Interfaces;
 using QM_ItemCreatorTool.Managers;
-using QM_ItemCreatorTool.Model;
-using Spellweaver.Commands;
-using System.Collections.ObjectModel;
+using QM_ItemCreatorTool.Commands;
 
 namespace QM_ItemCreatorTool.ViewModel;
 
 public class GeneralTabViewModel : ViewModelBase
 {
     private IErrorHandler _errorHandler;
-    private ModInstanceManager _modInstanceManager;
-	public GeneralTabViewModel(IErrorHandler errorHandler, ModInstanceManager modInstanceManager)
-	{
+    private IMessageBoxHandler _messageBoxHandler;
+    public GeneralTabViewModel(IErrorHandler errorHandler, IMessageBoxHandler messageBoxHandler)
+    {
         _errorHandler = errorHandler;
-        _modInstanceManager = modInstanceManager;
+        _messageBoxHandler = messageBoxHandler;
 
         // Commands
         SelectRootFolderCommand = new DelegateCommand(StoreRootPath);
         CreateModCommand = new DelegateCommand(CreateMod);
         LoadModCommand = new DelegateCommand(LoadMod);
+        ClearModCommand = new DelegateCommand(ClearMod);
     }
 
     #region Properties
@@ -34,21 +33,6 @@ public class GeneralTabViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<ModDataViewModel> ModList
-    {
-        get => _modInstanceManager.ModCollection;
-    }
-
-    public ModDataViewModel SelectedMod
-    {
-        get => _modInstanceManager.CurrentMod;
-        set
-        {
-            _modInstanceManager.CurrentMod = value;
-            RaisePropertyChanged();
-        }
-    }
-
     #endregion
 
     #region Commands
@@ -56,6 +40,7 @@ public class GeneralTabViewModel : ViewModelBase
     public DelegateCommand SelectRootFolderCommand { get; set; }
     public DelegateCommand CreateModCommand { get; set; }
     public DelegateCommand LoadModCommand { get; set; }
+    public DelegateCommand ClearModCommand { get; set; }
 
     private void StoreRootPath(object? obj)
     {
@@ -72,30 +57,44 @@ public class GeneralTabViewModel : ViewModelBase
 
     private void CreateMod(object? obj)
     {
-        var result = FolderExplorerManager.GetPathToFolder();
-        if (result == null)
-        {
-            // Error handler?
-            Exception ex = new Exception("Invalid path to folder was selected", new NullReferenceException());
-            _errorHandler.ThrowError("Error upon importing root path", ex);
-            return;
-        }
-        // Call API to create mod using the data provided.
-        // TODO FinalBoss!
-    }
-
-    private void LoadMod(object? obj)
-    {
-        var result = FolderExplorerManager.GetPathToFile("Load mod config file", "Json Files (*.json)|*.json");
-        if (result == null)
+        var selectedPath = FolderExplorerManager.GetPathToFolder();
+        if (selectedPath == null)
         {
             // Error handler?
             //Exception ex = new Exception("Invalid path to folder was selected", new NullReferenceException());
             //_errorHandler.ThrowError("Error upon importing root path", ex);
             return;
         }
-        _modInstanceManager.LoadNewMod(result);
+        // Call API to create mod using the data provided.
+        ModInstanceManager.CreateMod(selectedPath);
+    }
+
+    private void LoadMod(object? obj)
+    {
+        var selectedPath = FolderExplorerManager.GetPathToFile("Load mod config file", "Json Files (*.json)|*.json");
+        if (selectedPath == null)
+        {
+            // Error handler?
+            //Exception ex = new Exception("Invalid path to folder was selected", new NullReferenceException());
+            //_errorHandler.ThrowError("Error upon importing root path", ex);
+            return;
+        }
+        ModInstanceManager.LoadNewMod(selectedPath);
         // Load weapons atm.
+    }
+
+    private void ClearMod(object? obj)
+    {
+        var result = _messageBoxHandler.ThrowWarningConfirmation("Clear Mod Data", "You are about to clear all data.\n\nDo you want to continue?");
+        if (result)
+        {
+            // Error handler?
+            //Exception ex = new Exception("Invalid path to folder was selected", new NullReferenceException());
+            //_errorHandler.ThrowError("Error upon importing root path", ex);
+            ModInstanceManager.ClearMod();
+            return;
+        }
+        // Call API to create mod using the data provided.
     }
 
     #endregion

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace QM_ItemCreatorTool.ViewModel
@@ -23,13 +24,22 @@ namespace QM_ItemCreatorTool.ViewModel
         public virtual Task LoadAsync() => Task.CompletedTask;
     }
 
-    public class ViewModelBase<T> : ViewModelBase where T : class
+    public class ViewModelBase<T> : ViewModelBase where T : class, new()
     {
+        [JsonIgnore]
         protected readonly T _model;
+
+        [JsonIgnore]
+        public T GetModel => _model;
+
+        public ViewModelBase()
+        {
+            _model = new T();
+        }
+
         public ViewModelBase(T model)
         {
             _model = model;
         }
-        public T GetModel => _model;
     }
 }

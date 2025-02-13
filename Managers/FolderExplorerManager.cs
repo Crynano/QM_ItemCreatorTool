@@ -34,5 +34,20 @@ namespace QM_ItemCreatorTool.Managers
             }
             return null;
         }
+
+        public static string? SaveFileDialog(string title, string filter = "Text files (*.txt)|*.txt|Json Files (*.json)|*.json")
+        {
+            var dialog = new SaveFileDialog()
+            {
+                Title = title,
+                ValidateNames = true,
+                Filter = filter
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                return dialog.FileName;
+            }
+            return null;
+        }
     }
 }

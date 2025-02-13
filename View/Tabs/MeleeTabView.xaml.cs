@@ -4,9 +4,9 @@ namespace QM_ItemCreatorTool.View.Tabs;
 /// <summary>
 /// Interaction logic for WeaponsTabView.xaml
 /// </summary>
-public partial class WeaponsTabView : UserControl
+public partial class MeleeTabView : UserControl
 {
-    public WeaponsTabView()
+    public MeleeTabView()
     {
         InitializeComponent();
     }

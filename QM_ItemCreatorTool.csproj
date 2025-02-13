@@ -9,10 +9,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="publish\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <None Remove="publish\**" />
+    <Page Remove="publish\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="View\Tabs\FireModeTabView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Tabs\LocalizationTabView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Tabs\MeleeTabView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Tabs\ItemReceiptTabView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Tabs\AmmoTabView.xaml.cs">
+      <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
@@ -26,7 +48,7 @@
 	<PropertyGroup>
 		<GAME_NAME>Quasimorph</GAME_NAME>
 		<GAME_PATH>D:\SteamLibrary\steamapps\common\$(GAME_NAME)</GAME_PATH>
-		<MOD_ID>1</MOD_ID>
+		<MOD_ID>3284022031</MOD_ID>
 	</PropertyGroup>
 	<PropertyGroup>
 		<WorkshopPath>$(GAME_PATH)\..\..\workshop\content\2059170\$(MOD_ID)\</WorkshopPath>
@@ -34,13 +56,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AutoCompleteTextBox" Version="1.7.2" />
 		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Sdl.MultiSelectComboBox" Version="1.0.103" />
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -49,11 +74,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="Assembly-CSharp">
-			<HintPath>$(ManagedPath)Assembly-CSharp.dll</HintPath>
+		<Reference Include="Assembly-CSharp" Publicize="true">
+		  <HintPath>$(ManagedPath)Assembly-CSharp.dll</HintPath>
+			<Private>True</Private>
 		</Reference>
 		<Reference Include="QM_LiteItemImporter">
-		  <HintPath>..\..\..\Projects\01 Unity Plugins\QM_LiteItemImporter\package\QM_LiteItemImporter\QM_LiteItemImporter.dll</HintPath>
+		  <HintPath>$(WorkshopPath)QM_LiteItemImporter.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

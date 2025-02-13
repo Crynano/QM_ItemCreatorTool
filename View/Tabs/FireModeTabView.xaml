@@ -1,0 +1,120 @@
+﻿<UserControl x:Class="QM_ItemCreatorTool.View.Tabs.FireModeTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:QM_ItemCreatorTool.View.Tabs"
+             xmlns:converters="clr-namespace:QM_ItemCreatorTool.Converters"
+             xmlns:properties="clr-namespace:QM_ItemCreatorTool.Properties"
+             xmlns:MGSC="clr-namespace:MGSC;assembly=Assembly-CSharp"
+             xmlns:sdl="http://schemas.sdl.com/xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid.Resources>
+            <converters:StringToFloatConverter x:Key="StringToFloat"/>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel>
+            <DockPanel.Style>
+                <Style TargetType="DockPanel">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=CurrentValue, TargetNullValue=True}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DockPanel.Style>
+            <Button Content="Create new firemode" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Width="100" Height="25"
+                    Command="{Binding AddCommand}">
+
+            </Button>
+        </DockPanel>
+        <ScrollViewer>
+            <ScrollViewer.Resources>
+                <Style TargetType="TextBox">
+                    <Setter Property="Height" Value="24"/>
+                </Style>
+            </ScrollViewer.Resources>
+            <ScrollViewer.Style>
+                <Style TargetType="ScrollViewer">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=CurrentValue, TargetNullValue=True}" Value="True">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Style>
+            <DockPanel Margin="5" LastChildFill="False">
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="ID" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Image Path" DockPanel.Dock="Top"/>
+                    <DockPanel LastChildFill="True">
+                        <Button DockPanel.Dock="Right"
+                                Content="Path"
+                                Command="{Binding SpritePathCommand}"
+                                CommandParameter="{Binding CurrentValue.SpritePath}"/>
+                        <TextBox HorizontalAlignment="Stretch" Text="{Binding CurrentValue.SpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Accuracy" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.Accuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Damage Multiplier" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.DamageMultiplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Ammo per Shot" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.AmmoPerShot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Require all ammo to shoot" DockPanel.Dock="Top"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.RequiredAllAmmoToShot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Number of shots" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.WeaponCastsCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Delay between shots (seconds)" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.DelayInSecsBetweenShots, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Scatter Angle" DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding CurrentValue.ScatterAngle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+            </DockPanel>
+        </ScrollViewer>
+        <DockPanel Grid.Column="1" Margin="5" LastChildFill="True">
+            <Grid DockPanel.Dock="Bottom" Height="25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="0,2,0,0"/>
+                    </Style>
+                </Grid.Resources>
+                <Button Content="Add new firemode" Grid.Column="0" Command="{Binding AddCommand}"></Button>
+                <Button Content="Remove firemode" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
+            </Grid>
+            <!--Weapon List-->
+            <ListView DisplayMemberPath="ID" ItemsSource="{Binding FireModeList, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentValue}"/>
+        </DockPanel>
+    </Grid>
+</UserControl>
