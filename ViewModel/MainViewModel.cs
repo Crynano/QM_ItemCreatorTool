@@ -1,6 +1,7 @@
 ﻿using QM_ItemCreatorTool.Commands;
 using QM_ItemCreatorTool.Interfaces;
 using QM_ItemCreatorTool.Managers;
+using QM_ItemCreatorTool.View.Tabs;
 using System.IO;
 
 namespace QM_ItemCreatorTool.ViewModel
@@ -10,6 +11,7 @@ namespace QM_ItemCreatorTool.ViewModel
         #region ViewModels
         public RangedTabViewModel RangedTabViewModel { get; set; }
         public GeneralTabViewModel GeneralTabViewModel { get; set; }
+        public ArmorTabViewModel ArmorTabViewModel { get; set; }
         public MeleeTabViewModel MeleeTabViewModel { get; set; }
         public ItemReceiptTabViewModel ItemReceiptTabViewModel { get; set; }
         public LocalizationTabViewModel LocalizationTabViewModel { get; set; }
@@ -30,6 +32,7 @@ namespace QM_ItemCreatorTool.ViewModel
         public MainViewModel(
             RangedTabViewModel rangedViewModel,
             MeleeTabViewModel meleeTabViewModel,
+            ArmorTabViewModel armorTabViewModel,
             GeneralTabViewModel generalTabViewModel,
             ItemReceiptTabViewModel itemReceiptTabViewModel,
             LocalizationTabViewModel localizationTabViewModel,
@@ -39,9 +42,10 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             saveManager = new SaveManager();
 
-            RangedTabViewModel = rangedViewModel;
             GeneralTabViewModel = generalTabViewModel;
+            RangedTabViewModel = rangedViewModel;
             MeleeTabViewModel = meleeTabViewModel;
+            ArmorTabViewModel = armorTabViewModel;
             ItemReceiptTabViewModel = itemReceiptTabViewModel;
             LocalizationTabViewModel = localizationTabViewModel;
             AmmoTabViewModel = ammoTabViewModel;

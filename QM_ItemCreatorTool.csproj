@@ -24,6 +24,9 @@
     <Compile Update="View\Tabs\FireModeTabView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Tabs\ArmorTabView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Tabs\LocalizationTabView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

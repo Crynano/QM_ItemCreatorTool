@@ -22,11 +22,25 @@ internal static class FileImporter
         }
     }
 
-    public static void SaveAndSerialize<T>(string path, T content) where T : class
+    public static void SaveAndSerialize<T>(string folderPath, string fileNameAndExtension, T content) where T : class
+    {
+        Directory.CreateDirectory(folderPath);
+        try
+        {
+            var fullPath = Path.Combine(folderPath, fileNameAndExtension);
+            File.WriteAllText(fullPath, JsonConvert.SerializeObject(content, Formatting.Indented));
+        }
+        catch (Exception ex)
+        {
+            errorHandler.ThrowError($"Error upon serializing content", ex);
+        }
+    }
+
+    public static void SaveAndSerialize<T>(string fullPath, T content) where T : class
     {
         try
         {
-            File.WriteAllText(path, JsonConvert.SerializeObject(content, Formatting.Indented));
+            File.WriteAllText(fullPath, JsonConvert.SerializeObject(content, Formatting.Indented));
         }
         catch (Exception ex)
         {

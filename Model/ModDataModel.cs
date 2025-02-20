@@ -21,6 +21,7 @@ namespace QM_ItemCreatorTool.Model
         public ObservableCollection<LocalizationViewModel> LocalizationEntries = new ObservableCollection<LocalizationViewModel>();
         public ObservableCollection<AmmoViewModel> AmmoList = new ObservableCollection<AmmoViewModel>();
         public ObservableCollection<FireModeViewModel> FireModesList = new ObservableCollection<FireModeViewModel>();
+        public ObservableCollection<ArmorViewModel> ArmorList = new ObservableCollection<ArmorViewModel>();
         #endregion
 
         public ConfigTemplate config = new ConfigTemplate();

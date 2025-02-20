@@ -14,7 +14,6 @@ public class GeneralTabViewModel : ViewModelBase
         _messageBoxHandler = messageBoxHandler;
 
         // Commands
-        SelectRootFolderCommand = new DelegateCommand(StoreRootPath);
         CreateModCommand = new DelegateCommand(CreateMod);
         LoadModCommand = new DelegateCommand(LoadMod);
         ClearModCommand = new DelegateCommand(ClearMod);
@@ -22,38 +21,28 @@ public class GeneralTabViewModel : ViewModelBase
 
     #region Properties
 
-    private string? _configFilePath;
-    public string? ConfigFilePath
-    {
-        get => _configFilePath;
-        set
-        {
-            _configFilePath = value;
-            RaisePropertyChanged();
-        }
-    }
+    public string LoadModInfo { get; set; } = 
+        "Use the Load Mod button to import a mod.\n" +
+        "The file that must be selected is the global_config.json that a mod includes in its root folder.\n" +
+        "NOTE: This action will override all current data in this app, including custom items, localization and so on.";
+    public string CreateModInfo { get; set; } =
+        "Use the Create Mod button to create a mod.\n" +
+        "First, a Folder directory will open, where you will select the folder where the mod will be stored.\n" +
+        "Then, a global config json and the mod folder structure will be created in that folder.\n" +
+        "NOTE: All files already existing in the mod folder will be overwritten, but none will be deleted.\n" +
+        "This means that you can create a mod on top of an existing one to add or overwrite desired items.";
+    public string ClearModDataInfo { get; set; } =
+        "Use the Clear Mod Data button to CLEAR all items created in this app.\n" +
+        "Please note that this action will be irreversible.\n" +
+        "Mod author and colleagues take no responsibility for data lost using this app or function.";
 
     #endregion
 
     #region Commands
 
-    public DelegateCommand SelectRootFolderCommand { get; set; }
     public DelegateCommand CreateModCommand { get; set; }
     public DelegateCommand LoadModCommand { get; set; }
     public DelegateCommand ClearModCommand { get; set; }
-
-    private void StoreRootPath(object? obj)
-    {
-        var result = FolderExplorerManager.GetPathToFolder();
-        if (result == null)
-        {
-            // Error handler?
-            Exception ex = new Exception("Invalid path to folder was selected", new NullReferenceException());
-            _errorHandler.ThrowError("Error upon importing root path", ex);
-            return;
-        }
-        ConfigFilePath = result;
-    }
 
     private void CreateMod(object? obj)
     {

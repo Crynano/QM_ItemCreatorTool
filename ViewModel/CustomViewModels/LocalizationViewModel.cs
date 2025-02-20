@@ -2,6 +2,7 @@
 using QM_ItemCreatorTool.Properties;
 using QM_ItemCreatorTool.ViewModel;
 using System.Collections.ObjectModel;
+using System.Security.Policy;
 
 namespace QM_ItemCreatorTool.Model;
 public class LocalizationViewModel : ViewModelBase
@@ -16,7 +17,7 @@ public class LocalizationViewModel : ViewModelBase
         var languages = Enum.GetValues(typeof(MGSC.Localization.Lang));
         foreach (Localization.Lang language in languages)
         {
-            var a = new CustomStringDictionary(language);
+            var a = new CustomLanguageDictionary(language);
             Entries.Add(a);
         }
     }
@@ -28,6 +29,6 @@ public class LocalizationViewModel : ViewModelBase
         set { _id = value; RaisePropertyChanged(); }
     }
 
-    public string TableKey { get; set; } = string.Empty;
-    public ObservableCollection<CustomStringDictionary> Entries { get; set; } = new ObservableCollection<CustomStringDictionary>();
+    public string TableKey { get; set; } = "item";
+    public ObservableCollection<CustomLanguageDictionary> Entries { get; set; } = new ObservableCollection<CustomLanguageDictionary>();
 }

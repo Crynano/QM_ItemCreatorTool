@@ -51,7 +51,7 @@
                 </Style>
             </DockPanel.Style>
             <Button Content="New Weapon" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Width="100" Height="25"
+                    Style="{StaticResource GenericButton}"
                     Command="{Binding AddCommand}">
 
             </Button>
@@ -92,7 +92,7 @@
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Inventory Image Path" DockPanel.Dock="Top"/>
                     <DockPanel LastChildFill="True">
-                        <Button DockPanel.Dock="Right"
+                        <Button Style="{StaticResource PathButton}" DockPanel.Dock="Right"
                                 Content="Path"
                                 Command="{Binding SpritePathCommand}"
                                 CommandParameter="{Binding CurrentValue.SpritePath}"/>
@@ -102,7 +102,7 @@
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Ground Image Path" DockPanel.Dock="Top"/>
                     <DockPanel LastChildFill="True">
-                        <Button DockPanel.Dock="Right"
+                        <Button Style="{StaticResource PathButton}" DockPanel.Dock="Right"
                                 Content="Path"
                                 Command="{Binding SmallSpritePathCommand}"/>
                         <TextBox HorizontalAlignment="Stretch" Text="{Binding CurrentValue.SmallSpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -111,7 +111,7 @@
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Ground Shadow Image Path" DockPanel.Dock="Top"/>
                     <DockPanel LastChildFill="True">
-                        <Button DockPanel.Dock="Right"
+                        <Button Style="{StaticResource PathButton}" DockPanel.Dock="Right"
                                 Content="Path"
                                 Command="{Binding ShadowSpritePathCommand}"/>
                         <TextBox HorizontalAlignment="Stretch" Text="{Binding CurrentValue.ShadowSpritePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -126,7 +126,7 @@
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Faction Data" DockPanel.Dock="Top"/>
-                    <Button Content="Add new rule" HorizontalAlignment="Stretch" Command="{Binding AddFactionEntryCommand}" DockPanel.Dock="Bottom"></Button>
+                    <Button Style="{StaticResource GenericButton}" Content="Add new rule" HorizontalAlignment="Stretch" Command="{Binding AddFactionEntryCommand}" DockPanel.Dock="Bottom"></Button>
                     <DataGrid ItemsSource="{Binding CurrentValue.FactionRules}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridComboBoxColumn Header="Faction"
@@ -151,7 +151,7 @@
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Dissassembling Materials" DockPanel.Dock="Top"/>
-                    <Button Content="Add new material" HorizontalAlignment="Stretch" Command="{Binding AddUncraftingEntryCommand}" DockPanel.Dock="Bottom"></Button>
+                    <Button Style="{StaticResource GenericButton}" Content="Add new material" HorizontalAlignment="Stretch" Command="{Binding AddUncraftingEntryCommand}" DockPanel.Dock="Bottom"></Button>
                     <DataGrid ItemsSource="{Binding CurrentValue.DisassemblyList}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding ItemId}" Header="Output Item ID"></DataGridTextColumn>
@@ -348,36 +348,41 @@
                     <CheckBox IsChecked="{Binding CurrentValue.HasBFGOverlay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
+                    <TextBlock Text="Amputation on Wound" DockPanel.Dock="Top"/>
+                    <CheckBox IsChecked="{Binding CurrentValue.AmputationOnWound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Shooting Sound Path" DockPanel.Dock="Top"/>
-                    <Button DockPanel.Dock="Right"
+                    <Button Style="{StaticResource PathButton}" DockPanel.Dock="Right"
                             Content="Path"
                             Command="{Binding GetAttackSoundPathCommand}"/>
                     <TextBox Text="{Binding CurrentValue.AttackSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Dry Shot Sound Path" DockPanel.Dock="Top"/>
-                    <Button DockPanel.Dock="Right"
+                    <Button Style="{StaticResource PathButton}"
+                        DockPanel.Dock="Right"
                             Content="Path"
                             Command="{Binding GetDrySoundPathCommand}"/>
                     <TextBox Text="{Binding CurrentValue.DryShotSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Failed Attack Sound Path" DockPanel.Dock="Top"/>
-                    <Button DockPanel.Dock="Right"
+                    <Button Style="{StaticResource PathButton}" DockPanel.Dock="Right"
                             Content="Path"
                             Command="{Binding GetFailedSoundPathCommand}"/>
                     <TextBox Text="{Binding CurrentValue.FailedAttackSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Reload Sound Path" DockPanel.Dock="Top"/>
-                    <Button DockPanel.Dock="Right"
+                    <Button Style="{StaticResource PathButton}" DockPanel.Dock="Right"
                             Content="Path"
                             Command="{Binding GetReloadSoundPathCommand}"/>
                     <TextBox Text="{Binding CurrentValue.ReloadSoundPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Unity AssetBundle Path" DockPanel.Dock="Top"/>
-                    <Button DockPanel.Dock="Right"            Content="Path"            Command="{Binding GetBundlePath}"/>
+                    <Button  Style="{StaticResource PathButton}" DockPanel.Dock="Right"            Content="Path"            Command="{Binding GetBundlePath}"/>
                     <TextBox Text="{Binding CurrentValue.BundlePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
@@ -403,8 +408,8 @@
                         <Setter Property="Margin" Value="0,2,0,0"/>
                     </Style>
                 </Grid.Resources>
-                <Button Content="Add new weapon" Grid.Column="0" Command="{Binding AddCommand}"></Button>
-                <Button Content="Remove weapon" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
+                <Button Style="{StaticResource GenericButton}" Content="Add new weapon" Grid.Column="0" Command="{Binding AddCommand}"></Button>
+                <Button Style="{StaticResource GenericButton}" Content="Remove weapon" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
             </Grid>
             <!--Weapon List-->
             <ListView DisplayMemberPath="ID" ItemsSource="{Binding WeaponList, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentValue}"/>

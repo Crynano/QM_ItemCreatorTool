@@ -37,8 +37,8 @@
                     </Style.Triggers>
                 </Style>
             </DockPanel.Style>
-            <Button Content="Create new ammo entry" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Width="100" Height="25"
+            <Button Style="{StaticResource GenericButton}" Content="Create new ammo entry" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Command="{Binding AddCommand}">
 
             </Button>
@@ -249,8 +249,8 @@
                         <Setter Property="Margin" Value="0,2,0,0"/>
                     </Style>
                 </Grid.Resources>
-                <Button Content="Add new ammo entry" Grid.Column="0" Command="{Binding AddCommand}"></Button>
-                <Button Content="Remove ammo entry" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
+                <Button Style="{StaticResource GenericButton}" Content="Add new ammo entry" Grid.Column="0" Command="{Binding AddCommand}"></Button>
+                <Button Style="{StaticResource GenericButton}" Content="Remove ammo entry" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
             </Grid>
             <!--Weapon List-->
             <ListView DisplayMemberPath="ID" ItemsSource="{Binding AmmoList, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentValue}"/>

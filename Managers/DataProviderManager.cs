@@ -39,8 +39,21 @@ namespace QM_ItemCreatorTool.Managers
         // Factions
         private Lazy<List<string>> _factions = new Lazy<List<string>>(() => new FactionsProvider().GetData().ToList());
         public List<string> Factions { get { return _factions.Value; } }
+
         // Chips in-game
         private Lazy<List<string>> _chips = new Lazy<List<string>>(() => new ChipsProvider().GetData().ToList());
         public List<string> Chips { get { return _chips.Value; } }
+
+        // Resistances
+        private Lazy<List<string>> _resists = new Lazy<List<string>>(() => new ResistancesProvider().GetData().ToList());
+        public List<string> Resistances { get { return _resists.Value; } }
+
+        // Armor Slots
+        private Lazy<List<string>> _armorSlots = new Lazy<List<string>>(() => new ArmorSlotsProvider().GetData().ToList());
+        public List<string> ArmorSlots { get { return _armorSlots.Value; } }
+
+        // Armor Types
+        //private Lazy<List<string>> _armorSlots = new Lazy<List<string>>(() => new ArmorSlotsProvider().GetData().ToList());
+        //public List<string> ArmorSlots { get { return _armorSlots.Value; } }
     }
 }

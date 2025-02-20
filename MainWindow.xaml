@@ -24,6 +24,9 @@
         <DataTemplate DataType="{x:Type ViewModels:MeleeTabViewModel}">
             <Tabs:MeleeTabView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type ViewModels:ArmorTabViewModel}">
+            <Tabs:ArmorTabView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type ViewModels:GeneralTabViewModel}">
             <Tabs:GeneralTabView/>
         </DataTemplate>
@@ -66,12 +69,18 @@
             </MenuItem>
         </Menu>
         <TabControl Grid.Row="1" Margin="2">
+            <TabControl.Resources>
+                <Style BasedOn="{StaticResource GenericTabEntry}" TargetType="TabItem"/>
+            </TabControl.Resources>
             <TabItem Header="General">
                 <ContentControl Content="{Binding Path=GeneralTabViewModel}"/>
             </TabItem>
-            <!--<TabItem Header="Melee Weapons">
+            <TabItem Header="Armor" Visibility="Collapsed">
+                <ContentControl Content="{Binding Path=ArmorTabViewModel}"/>
+            </TabItem>
+            <TabItem Header="Melee Weapons">
                 <ContentControl Content="{Binding Path=MeleeTabViewModel}"/>
-            </TabItem>-->
+            </TabItem>
             <TabItem Header="Ranged Weapons">
                 <ContentControl Content="{Binding Path=RangedTabViewModel}"/>
             </TabItem>

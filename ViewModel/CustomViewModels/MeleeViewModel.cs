@@ -63,14 +63,6 @@ namespace QM_ItemCreatorTool.ViewModel
             set { _model.canMeleeAmputate = value; RaisePropertyChanged(); }
         }
 
-        public bool AmputateOnWound
-        {
-            get { return _model.amputationOnWound; }
-            set { _model.amputationOnWound = value; RaisePropertyChanged(); }
-        }
-
-
-
         //public float visualReachCellDuration { get; set; }
 
         //public List<string> entityFlySprites { get; set; }

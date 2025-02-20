@@ -31,6 +31,7 @@ namespace QM_ItemCreatorTool
             service.AddTransient<GeneralTabViewModel>();
             service.AddTransient<RangedTabViewModel>();
             service.AddTransient<MeleeTabViewModel>();
+            service.AddTransient<ArmorTabViewModel>();
             service.AddTransient<AmmoTabViewModel>();
             service.AddTransient<FireModeTabViewModel>();
             service.AddTransient<ItemReceiptTabViewModel>();

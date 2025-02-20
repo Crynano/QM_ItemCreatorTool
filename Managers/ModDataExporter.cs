@@ -323,18 +323,21 @@ namespace QM_ItemCreatorTool.Managers
             //!!!! TODO ADD WARNING !!!!
             /// Print the mastermind first
             // Deserialize the mastermind
-            FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, "global_config.json"), modifiedModData.Configuration);
+            FileImporter.SaveAndSerialize(baseDirectory, "global_config.json", modifiedModData.Configuration);
 
-            // Now, create all foldersystem
-            foreach (var item in modifiedModData.Configuration.folderPaths.Values)
-            {
-                Directory.CreateDirectory(Path.Combine(baseDirectory, item));
-            }
-            // The localization file must be a json, not a folder! Dum dum
-            foreach (var item in modifiedModData.Configuration.localizationPaths.Values)
-            {
-                Directory.CreateDirectory(Path.Combine(baseDirectory, item));
-            }
+            //// Now, create all foldersystem
+            /// Or avoid doing so in favour of cleanliness
+            //foreach (var item in modifiedModData.Configuration.folderPaths.Values)
+            //{
+            //    Directory.CreateDirectory(Path.Combine(baseDirectory, item));
+            //}
+
+            //// The localization file must be a json, not a folder! Dum dum
+            /// Or avoid doing so in favour of cleanliness
+            //foreach (var item in modifiedModData.Configuration.localizationPaths.Values)
+            //{
+            //    Directory.CreateDirectory(Path.Combine(baseDirectory, item));
+            //}
             // Descriptors
             var fullDescriptorsPath = Path.Combine(baseDirectory, modifiedModData.Configuration.descriptorsPath);
             Directory.CreateDirectory(fullDescriptorsPath);
@@ -345,13 +348,13 @@ namespace QM_ItemCreatorTool.Managers
             modifiedModData.Configuration.folderPaths.TryGetValue("rangedweapons", out string? rangedWeaponsRelativePath);
             foreach (var item in modifiedModData.Weapons)
             {
-                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, rangedWeaponsRelativePath, item.ID + ".json"), item.GetModel);
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, rangedWeaponsRelativePath), item.ID + ".json", item.GetModel);
             }
 
             modifiedModData.Configuration.folderPaths.TryGetValue("meleeweapons", out string? meleeWeaponsRelativePath);
             foreach (var item in modifiedModData.Melee)
             {
-                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, meleeWeaponsRelativePath, item.ID + ".json"), item.GetModel);
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, meleeWeaponsRelativePath), item.ID + ".json", item.GetModel);
             }
 
             //modifiedModData.Configuration.localizationPaths.TryGetValue("item", out string? localizationFilePath);
@@ -371,8 +374,8 @@ namespace QM_ItemCreatorTool.Managers
             foreach (var entry in modifiedModData.Configuration.localizationPaths)
             {
                 var localizationFile = modifiedModData.GetLocalization(entry.Key);
-                if (localizationFile == null) continue;
-                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, entry.Value, $"{entry.Key}_localization.json"), localizationFile);
+                if (localizationFile == null || localizationFile.name.Count <= 0) continue;
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, entry.Value), $"{entry.Key}_localization.json", localizationFile);
             }
             // Print the localization file
 
@@ -392,18 +395,18 @@ namespace QM_ItemCreatorTool.Managers
                 //Path and bundle
                 item.bundlePath = CopyFileToRelative(item.bundlePath, baseDirectory, "Assets/Bundles");
                 // Finalize
-                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, descriptorsRelativePath, item.attachedId + "_descriptor.json"), item);
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, descriptorsRelativePath), item.attachedId + "_descriptor.json", item);
             }
 
             // Crafting specs
             modifiedModData.Configuration.folderPaths.TryGetValue("itemreceipts", out string? craftingSpecsPath);
             foreach (ItemProduceReceiptTemplate item in modifiedModData.GetCraftingSpecs())
             {
-                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, craftingSpecsPath, item.OutputItem + "_receipt.json"), item);
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, craftingSpecsPath), item.OutputItem + "_receipt.json", item);
             }
 
             modifiedModData.Configuration.folderPaths.TryGetValue("factionconfig", out string? factionPath);
-            FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, factionPath, "FactionData.json"), modifiedModData.GetFactionData());
+            FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, factionPath), "FactionData.json", modifiedModData.GetFactionData());
 
             // This is for when destroying an object?
             ExportCategory(modifiedModData.GetItemTransforms(), "itemtransforms", "transformationData");
@@ -417,7 +420,7 @@ namespace QM_ItemCreatorTool.Managers
                 item.FireModeSpritePath = CopyFileToRelative(item.FireModeSpritePath, baseDirectory, "Assets/Images");
 
                 // Finalize
-                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, fireModesRelativePath, item.id + "_firemode.json"), item);
+                FileImporter.SaveAndSerialize(Path.Combine(baseDirectory, fireModesRelativePath), item.id + "_firemode.json", item);
             }
 
             if (!string.IsNullOrEmpty(CreateModReport))
@@ -433,7 +436,7 @@ namespace QM_ItemCreatorTool.Managers
                 FolderPaths.TryGetValue(folderKey, out string? folderPath);
                 foreach (var item in exportList)
                 {
-                    FileImporter.SaveAndSerialize(Path.Combine(BaseDirectory, folderPath, $"{item.Id}_{fileName}.json"), item);
+                    FileImporter.SaveAndSerialize(Path.Combine(BaseDirectory, folderPath), $"{item.Id}_{fileName}.json", item);
                 }
             }
             catch (Exception ex)
@@ -449,7 +452,7 @@ namespace QM_ItemCreatorTool.Managers
                 FolderPaths.TryGetValue(folderKey, out string? folderPath);
                 foreach (var item in exportList)
                 {
-                    FileImporter.SaveAndSerialize(Path.Combine(BaseDirectory, folderPath, $"{item.id}_{fileName}.json"), item);
+                    FileImporter.SaveAndSerialize(Path.Combine(BaseDirectory, folderPath), $"{item.id}_{fileName}.json", item);
                 }
             }
             catch (Exception ex)

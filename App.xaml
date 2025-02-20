@@ -8,7 +8,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/ColorPalette.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/DropdownStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/GenericStyles.xaml"/>
                 <ResourceDictionary Source="Resources/Templates/DropdownTemplates.xaml"/>
+                <ResourceDictionary Source="Resources/Templates/GenericTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -12,8 +12,8 @@ public class ItemReceiptTabViewModel : TabViewModel<ItemProduceViewModel>
     {
         this.DataProvider = dataProvider;
 
-        AddIngredient = new DelegateCommand(CreateNewEntry);
-        AddItemGrade = new DelegateCommand(AddGradeEntry);
+        AddIngredientCommand = new DelegateCommand(AddIngredient);
+        AddItemGradeCommand = new DelegateCommand(AddGradeEntry);
 
         AddCommand = new DelegateCommand(Add);
         RemoveCommand = new DelegateCommand(Remove);
@@ -25,14 +25,15 @@ public class ItemReceiptTabViewModel : TabViewModel<ItemProduceViewModel>
     #endregion
 
     #region Commands
-    public DelegateCommand AddIngredient { get; set; }
-    public DelegateCommand AddItemGrade { get; set; }
+    public DelegateCommand AddIngredientCommand { get; set; }
+    public DelegateCommand AddItemGradeCommand { get; set; }
+
     private void AddGradeEntry(object? obj)
     {
         if (CurrentValue == null) return;
         CurrentValue.ModifyItemsGrades.Add(new CustomItemQuantity(string.Empty, 1));
     }
-    private void CreateNewEntry(object? obj)
+    private void AddIngredient(object? obj)
     {
         if (CurrentValue == null) return;
         CurrentValue.RequiredItems.Add(new CustomItemQuantity(string.Empty, 1));

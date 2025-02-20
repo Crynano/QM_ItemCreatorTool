@@ -238,6 +238,12 @@ namespace QM_ItemCreatorTool.ViewModel
             set { _model.grip = value; RaisePropertyChanged(); }
         }
 
+        public bool AmputationOnWound
+        {
+            get => _model.amputationOnWound;
+            set { _model.amputationOnWound = value; RaisePropertyChanged(); }
+        }
+
         public bool HasBFGOverlay
         {
             get => _model.hasHFGOverlay;

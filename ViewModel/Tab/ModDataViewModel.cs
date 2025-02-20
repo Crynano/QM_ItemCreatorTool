@@ -161,7 +161,7 @@ namespace QM_ItemCreatorTool.ViewModel
                     Enum.TryParse(typeof(Localization.Lang), languageNameEntry.Key, out var entryLanguage);
                     if (entryLanguage == null) break;
                     var descLanguagePair = descEntries.First(x => x.Key.Equals(languageNameEntry.Key));
-                    CustomStringDictionary e = new CustomStringDictionary(languageNameEntry.Value, descLanguagePair.Value, (Localization.Lang)entryLanguage);
+                    CustomLanguageDictionary e = new CustomLanguageDictionary(languageNameEntry.Value, descLanguagePair.Value, (Localization.Lang)entryLanguage);
                     a.Entries.Add(e);
                 }
                 LocalizationEntries.Add(a);
@@ -173,7 +173,7 @@ namespace QM_ItemCreatorTool.ViewModel
             LocalizationTemplate localizationFile = new LocalizationTemplate();
             localizationFile.name = new Dictionary<string, Dictionary<string, string>>();
             localizationFile.shortdesc = new Dictionary<string, Dictionary<string, string>>();
-            var localizationEntries = LocalizationEntries.Where(x => x.TableKey.Equals(key, StringComparison.CurrentCulture));
+            var localizationEntries = LocalizationEntries.Where(x => x.TableKey.Equals(key, StringComparison.InvariantCultureIgnoreCase));
             foreach (LocalizationViewModel item in localizationEntries)
             {
                 var currentItemEntries = item.Entries.ToList();
@@ -220,12 +220,19 @@ namespace QM_ItemCreatorTool.ViewModel
             set { GetModel.FireModesList = value; RaisePropertyChanged(); }
         }
 
+        public ObservableCollection<ArmorViewModel> Armors
+        {
+            get => GetModel.ArmorList;
+            set { GetModel.ArmorList = value; RaisePropertyChanged(); }
+        }
+
         public void AddItemToList(object item)
         {
             switch (item)
             {
                 case RangedViewModel ranged: Weapons.Add(ranged); break;
                 case MeleeViewModel melee: Melee.Add(melee); break;
+                case ArmorViewModel armor: Armors.Add(armor); break;
                 case ItemProduceViewModel itemProduce:
                     {
                         ItemReceipts.Add(itemProduce);

@@ -6,7 +6,9 @@
              xmlns:local="clr-namespace:QM_ItemCreatorTool.View.Tabs"
              xmlns:converters="clr-namespace:QM_ItemCreatorTool.Converters"
              xmlns:sdl="http://schemas.sdl.com/xaml"
-             mc:Ignorable="d" 
+                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:model="clr-namespace:QM_ItemCreatorTool.Model"
+                mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
         <Grid.Resources>
@@ -29,9 +31,9 @@
                     </Style.Triggers>
                 </Style>
             </DockPanel.Style>
-            <Button Content="Add new entry" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                     Width="100" Height="25"
-                     Command="{Binding AddCommand}"/>
+            <Button Style="{StaticResource GenericButton}" Content="Add new entry" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Command="{Binding AddCommand}"/>
         </DockPanel>
         <ScrollViewer>
             <ScrollViewer.Resources>
@@ -86,8 +88,8 @@
                         <Setter Property="Margin" Value="0,2,0,0"/>
                     </Style>
                 </Grid.Resources>
-                <Button Content="Add new entry" Grid.Column="0" Command="{Binding AddCommand}"></Button>
-                <Button Content="Remove entry" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
+                <Button Style="{StaticResource GenericButton}" Content="Add new entry" Grid.Column="0" Command="{Binding AddCommand}"></Button>
+                <Button Style="{StaticResource GenericButton}" Content="Remove entry" Grid.Column="1" Command="{Binding RemoveCommand}"></Button>
             </Grid>
             <!--Weapon List-->
             <ListView DisplayMemberPath="ID" ItemsSource="{Binding LocalizationEntries, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentValue}"/>
