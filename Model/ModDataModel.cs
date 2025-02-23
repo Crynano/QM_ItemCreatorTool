@@ -24,7 +24,7 @@ namespace QM_ItemCreatorTool.Model
         public ObservableCollection<ArmorViewModel> ArmorList = new ObservableCollection<ArmorViewModel>();
         #endregion
 
-        public ConfigTemplate config = new ConfigTemplate();
+        public ConfigTemplate config = ConfigTemplate.GetDefault();
 
         public void PrepareExport()
         {

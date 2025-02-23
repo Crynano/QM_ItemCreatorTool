@@ -81,8 +81,8 @@
 		  <HintPath>$(ManagedPath)Assembly-CSharp.dll</HintPath>
 			<Private>True</Private>
 		</Reference>
-		<Reference Include="QM_LiteItemImporter">
-		  <HintPath>$(WorkshopPath)QM_LiteItemImporter.dll</HintPath>
+		<Reference Include="QM_WeaponImporter">
+		  <HintPath>$(WorkshopPath)QM_WeaponImporter.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
