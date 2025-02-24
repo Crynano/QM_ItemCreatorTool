@@ -82,7 +82,7 @@
 			<Private>True</Private>
 		</Reference>
 		<Reference Include="QM_WeaponImporter">
-		  <HintPath>$(WorkshopPath)QM_WeaponImporter.dll</HintPath>
+			<HintPath>$(WorkshopPath)QM_WeaponImporter.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

@@ -87,7 +87,7 @@
             </DockPanel>
         </ScrollViewer>
         <DockPanel Grid.Column="1" Margin="5" LastChildFill="True">
-            <Grid DockPanel.Dock="Bottom" Height="25">
+            <Grid DockPanel.Dock="Bottom">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
