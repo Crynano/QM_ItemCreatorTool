@@ -332,10 +332,6 @@
                     <TextBox Text="{Binding CurrentValue.OffSlotCritChance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Minimum Damage Cap Bonus (?)" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding CurrentValue.MinDmgCapBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Ramp Up Value" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding CurrentValue.RampUpValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>

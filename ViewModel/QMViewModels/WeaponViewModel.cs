@@ -10,7 +10,7 @@ namespace QM_ItemCreatorTool.ViewModel
 {
     public class WeaponViewModel<T> : BreakableItemViewModel<T>, IFactionData, ICraftData, IChipData where T : WeaponTemplate, new()
     {
-        public WeaponViewModel() { _model.useCustomBullet = false; }
+        public WeaponViewModel() { }
         public WeaponViewModel(T item) : base(item) { }
 
         #region Properties
@@ -218,12 +218,6 @@ namespace QM_ItemCreatorTool.ViewModel
         {
             get => _model.offSlotCritChance;
             set { _model.offSlotCritChance = value; RaisePropertyChanged(); }
-        }
-
-        public float MinDmgCapBonus
-        {
-            get => _model.minDmgCapBonus;
-            set { _model.minDmgCapBonus = value; RaisePropertyChanged(); }
         }
 
         public float FovLookAngleMult

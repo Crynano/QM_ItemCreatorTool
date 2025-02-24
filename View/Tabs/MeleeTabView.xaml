@@ -234,10 +234,6 @@
                     <TextBox Text="{Binding CurrentValue.OffSlotCritChance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="3">
-                    <TextBlock Text="Minimum Damage Cap Bonus (?)" DockPanel.Dock="Top"/>
-                    <TextBox Text="{Binding CurrentValue.MinDmgCapBonus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-                <DockPanel DockPanel.Dock="Top" Margin="3">
                     <TextBlock Text="Field of View Angle Multiplier" DockPanel.Dock="Top"/>
                     <TextBox Text="{Binding CurrentValue.FovLookAngleMult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
