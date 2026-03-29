@@ -1,5 +1,6 @@
-# QM_ItemCreatorTool
+# [OUTDATED and DEPRECATED]
 
+# QM_ItemCreatorTool
 ## Quick Guide
 - First, subscribe to the mod "Item and Weapon Importer" in the workshop.
 - Open the tool and add configure weapons, receipts and optionally the localization
